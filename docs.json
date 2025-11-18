@@ -1,5 +1,4 @@
 {
-  "$schema": "https://mintlify.com/docs.json",
   "theme": "willow",
   "name": "Smallest AI",
   "colors": {
@@ -7,7 +6,7 @@
     "light": "#07C983",
     "dark": "#15803D"
   },
-  "favicon": "/smallest-ai-logo.svg",
+  "favicon": "/smallest_ai_logo.svg",
   "navigation": {
     "tabs": [
       {

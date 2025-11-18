@@ -1,97 +1,67 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: 'Authentication and First API Call'
+description: 'Get started with Authenticating your first API call'
+icon: 'code'
 ---
 
-## Setting up
+Welcome to the Smallest AI API. This page walks you through creating credentials and sending a verified request to Smallest AI.
 
-Get your documentation site up and running in minutes.
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+## 1. Create an API Key
 
-## Make it yours
+Authentication is handled using API keys. You must create a new API key from [console/apikeys](https://console.smallest.ai/apikeys).
 
-Design a docs site that looks great and empowers your users.
+## 2. Make Your First Request
 
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
-  </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
+You can use the CLI (Command Line Interface) or Python-SDK to make the request.
 
-## Create beautiful pages
+### CLI
+Send requests to the API with an `Authorization` header that includes your API Key using the Bearer token format.
 
-Everything you need to create world-class documentation.
+```shell
+curl -X POST 'https://waves-api.smallest.ai/api/v1/lightning/synthesize' \
+  -H 'Authorization: Bearer <YOUR_API_KEY>' \
+  -H 'Content-Type: application/json' \
+  -o output.wav \
+  -d '{
+        "text": "How to generate professional documentation?",
+        "output_format": "wav"
+      }'
+```
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
 
-## Need inspiration?
+### Python
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+Install the latest version of the Smallest AI SDK (Software Development Kit).
+
+```bash
+pip install smallestai
+```
+
+Set your API key as an environment variable for security:
+> Do not embed API keys in client-side code.
+```bash
+export SMALLEST_AI_API_KEY=<YOUR_API_KEY>
+```
+
+
+```Python getting-started.py
+from smallestai.waves import WavesClient
+import os
+
+def main():
+    client = WavesClient(api_key=os.environ["SMALLEST_AI_API_KEY"])
+    client.synthesize(
+        "How to generate professional documentation?",
+        save_as="output.wav"
+    )
+
+if __name__ == "__main__":
+    main()
+```
+
+Use any audio player to play your generated audio.
+
+
+
+
