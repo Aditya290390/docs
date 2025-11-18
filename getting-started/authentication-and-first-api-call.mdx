@@ -1,0 +1,67 @@
+---
+title: 'Authentication and First API Call'
+description: 'Get started with Authenticating your first API call'
+icon: 'code'
+---
+
+Welcome to the Smallest AI API. This page walks you through creating credentials and sending a verified request to Smallest AI.
+
+
+## 1. Create an API Key
+
+Authentication is handled using API keys. You must create a new API key from [console/apikeys](https://console.smallest.ai/apikeys).
+
+## 2. Make Your First Request
+
+You can use the CLI (Command Line Interface) or Python-SDK to make the request.
+
+### CLI
+Send requests to the API with an `Authorization` header that includes your API Key using the Bearer token format.
+
+```shell
+curl -X POST 'https://waves-api.smallest.ai/api/v1/lightning/synthesize' \
+  -H 'Authorization: Bearer <YOUR_API_KEY>' \
+  -H 'Content-Type: application/json' \
+  -o output.wav \
+  -d '{
+        "text": "How to generate professional documentation?",
+        "output_format": "wav"
+      }'
+```
+
+
+### Python
+
+Install the latest version of the Smallest AI SDK (Software Development Kit).
+
+```bash
+pip install smallestai
+```
+
+Set your API key as an environment variable for security:
+> Do not embed API keys in client-side code.
+```bash
+export SMALLEST_AI_API_KEY=<YOUR_API_KEY>
+```
+
+
+```Python getting-started.py
+from smallestai.waves import WavesClient
+import os
+
+def main():
+    client = WavesClient(api_key=os.environ["SMALLEST_AI_API_KEY"])
+    client.synthesize(
+        "How to generate professional documentation?",
+        save_as="output.wav"
+    )
+
+if __name__ == "__main__":
+    main()
+```
+
+Use any audio player to play your generated audio.
+
+
+
+
