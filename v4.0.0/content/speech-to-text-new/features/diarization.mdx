@@ -1,0 +1,41 @@
+---
+title: 'Speaker diarization'
+description: 'Label each word and utterance with turn-by-turn speaker IDs'
+---
+
+## Learn how to enable speaker diarization
+
+Pass `diarize=true` when calling the Lightning STT POST endpoint. The parameter can be combined with other enrichment options (timestamps, emotions, etc.) without changing your audio payload.
+
+## Output format & field of interest
+
+When enabled, every entry in `word_timestamps` includes a `speaker` field (`speaker_0`, `speaker_1`, …). The `utterances` array also carries `speaker` labels so you can reconstruct conversations, build turn-taking analytics, or display multi-speaker captions.
+
+## Sample request
+
+```bash
+curl --request POST \
+  --url "https://waves-api.smallest.ai/api/v1/lightning/get_text?model=lightning&language=en&diarize=true&word_timestamps=true" \
+  --header "Authorization: Bearer $SMALLEST_API_KEY" \
+  --header "Content-Type: audio/wav" \
+  --data-binary "@/path/to/two-speaker.wav"
+```
+
+## Sample response
+
+```json
+{
+  "transcription": "Agent: Hello world. Customer: Hi there.",
+  "word_timestamps": [
+    { "word": "Hello", "start": 0.0, "end": 0.4, "speaker": "speaker_0" },
+    { "word": "world.", "start": 0.4, "end": 0.8, "speaker": "speaker_0" },
+    { "word": "Hi", "start": 1.0, "end": 1.2, "speaker": "speaker_1" },
+    { "word": "there.", "start": 1.2, "end": 1.6, "speaker": "speaker_1" }
+  ],
+  "utterances": [
+    { "text": "Hello world.", "start": 0.0, "end": 0.8, "speaker": "speaker_0" },
+    { "text": "Hi there.", "start": 1.0, "end": 1.6, "speaker": "speaker_1" }
+  ]
+}
+```
+

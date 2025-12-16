@@ -1,0 +1,308 @@
+---
+title: 'Evaluate ASR accuracy'
+description: 'Run dataset-scale WER evaluations with Waves ASR'
+---
+
+# Overview
+
+> Transcribe labeled audio at scale, normalize the text, and compute Word Error Rate (WER) to verify ASR quality.
+
+# What we're doing
+
+This guide walks through ingesting a CSV of audio samples, running them through Waves’ Lightning ASR (streaming or HTTP), normalizing hypotheses, and calculating WER so you can track accuracy across releases or datasets.
+
+# Metric for evaluation
+
+- **Word Error Rate (WER)** – `(Substitutions + Deletions + Insertions) ÷ Reference words`
+- Normalize text before computing WER using [`whisper-normalizer`](https://github.com/openai/whisper/tree/main/whisper/normalizer) to remove casing, punctuation, and numeric variants for fair comparisons.
+
+# Dataset
+
+Your dataset should be a CSV with ground-truth transcripts.
+
+## Local audio paths
+
+| Column       | Description                 |
+| ------------ | --------------------------- |
+| `audio_path` | Relative path to audio file |
+| `text`       | Reference transcript        |
+
+```csv title="local_audio.csv"
+audio_path,text
+data/en_001.wav,Hello how are you doing today
+data/en_002.wav,This is a test of speech recognition
+```
+
+## Remote audio URLs
+
+| Column      | Description                                  |
+| ----------- | -------------------------------------------- |
+| `audio_url` | Public HTTP URL for the audio sample         |
+| `text`      | Reference transcript                         |
+
+```csv title="remote_audio.csv"
+audio_url,text
+https://example.com/audio/en_001.wav,Hello how are you doing today
+https://example.com/audio/en_002.wav,This is a test of speech recognition
+```
+
+# Prerequisites and setup
+
+```bash
+pip install websockets jiwer whisper-normalizer requests
+export SMALLEST_API_KEY=YOUR_API_KEY
+```
+
+Ensure each audio file matches the parameters you plan to send (e.g., 16 kHz linear16 mono).
+
+# Evaluation code
+
+<CodeGroup>
+
+```python title="streaming_eval.py"
+import asyncio
+import csv
+import json
+import websockets
+from jiwer import wer
+from whisper_normalizer.english import EnglishTextNormalizer
+from whisper_normalizer.basic import BasicTextNormalizer
+
+english_normalizer = EnglishTextNormalizer()
+fallback_normalizer = BasicTextNormalizer()
+
+
+async def transcribe_audio(api_key, audio_path, language="en"):
+    with open(audio_path, "rb") as f:
+        audio_data = f.read()
+
+    params = {
+        "audioLanguage": language,
+        "audioEncoding": "linear16",
+        "audioSampleRate": "16000",
+        "audioChannels": "1",
+        "addPunctuation": "true",
+        "api_key": api_key,
+    }
+    query = "&".join([f"{k}={v}" for k, v in params.items()])
+    url = f"wss://waves-api.smallest.ai/api/v1/asr?{query}"
+
+    transcript_chunks = []
+
+    async with websockets.connect(url) as ws:
+        async def listener():
+            async for message in ws:
+                response = json.loads(message)
+                if "text" in response:
+                    transcript_chunks.append(response["text"])
+
+        listen_task = asyncio.create_task(listener())
+
+        chunk_size = int(16000 * 2 * 0.3)  # 0.3s of 16 kHz PCM
+        buffer = audio_data
+        while buffer:
+            chunk, buffer = buffer[:chunk_size], buffer[chunk_size:]
+            await ws.send(chunk)
+            await asyncio.sleep(0.3)
+
+        await ws.send(b"")  # end of stream
+        await asyncio.sleep(2)
+        listen_task.cancel()
+
+    return " ".join(transcript_chunks)
+
+
+def normalize_text(text, language):
+    normalizer = english_normalizer if language == "en" else fallback_normalizer
+    return normalizer(text)
+
+
+async def main():
+    api_key = "YOUR_API_KEY"
+    input_csv = "dataset.csv"
+    output_csv = "streaming_results.csv"
+    results = []
+
+    with open(input_csv, newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            language = row.get("language", "en")
+            reference = row.get("text", "")
+            transcript = await transcribe_audio(api_key, row["audio_path"], language)
+
+            ref_norm = normalize_text(reference, language)
+            hyp_norm = normalize_text(transcript, language)
+            row["transcript"] = transcript
+            row["wer"] = wer(ref_norm, hyp_norm)
+            results.append(row)
+
+    if results:
+        with open(output_csv, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=results[0].keys())
+            writer.writeheader()
+            writer.writerows(results)
+
+    avg_wer = sum(r["wer"] for r in results) / len(results)
+    print(f"Average WER: {avg_wer:.3f}")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+```python title="http_raw_eval.py"
+import csv
+import requests
+from jiwer import wer
+from whisper_normalizer.english import EnglishTextNormalizer
+from whisper_normalizer.basic import BasicTextNormalizer
+
+english_normalizer = EnglishTextNormalizer()
+fallback_normalizer = BasicTextNormalizer()
+
+
+def transcribe_file(api_key, audio_path, language="en"):
+    url = "https://waves-api.smallest.ai/api/v1/lightning/get_text"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "audio/wav",
+    }
+    params = {
+        "model": "lightning",
+        "language": language,
+        "word_timestamps": "false",
+    }
+    with open(audio_path, "rb") as f:
+        audio_bytes = f.read()
+    response = requests.post(url, headers=headers, params=params, data=audio_bytes, timeout=120)
+    response.raise_for_status()
+    return response.json()["transcription"]
+
+
+def main():
+    api_key = "YOUR_API_KEY"
+    input_csv = "dataset.csv"
+    output_csv = "http_results.csv"
+    results = []
+
+    with open(input_csv, newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            language = row.get("language", "en")
+            reference = row.get("text", "")
+            transcript = transcribe_file(api_key, row["audio_path"], language)
+
+            normalizer = english_normalizer if language == "en" else fallback_normalizer
+            row["transcript"] = transcript
+            row["wer"] = wer(normalizer(reference), normalizer(transcript))
+            results.append(row)
+
+    if results:
+        with open(output_csv, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=results[0].keys())
+            writer.writeheader()
+            writer.writerows(results)
+
+    avg_wer = sum(r["wer"] for r in results) / len(results)
+    print(f"Average WER: {avg_wer:.3f}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+```python title="http_url_eval.py"
+import csv
+import json
+import requests
+from jiwer import wer
+from whisper_normalizer.english import EnglishTextNormalizer
+from whisper_normalizer.basic import BasicTextNormalizer
+
+english_normalizer = EnglishTextNormalizer()
+fallback_normalizer = BasicTextNormalizer()
+
+
+def transcribe_url(api_key, audio_url, language="en"):
+    url = "https://waves-api.smallest.ai/api/v1/lightning/get_text"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
+    params = {
+        "model": "lightning",
+        "language": language,
+        "word_timestamps": "false",
+    }
+    payload = {"url": audio_url}
+    response = requests.post(url, headers=headers, params=params, data=json.dumps(payload), timeout=120)
+    response.raise_for_status()
+    return response.json()["transcription"]
+
+
+def main():
+    api_key = "YOUR_API_KEY"
+    input_csv = "dataset_urls.csv"
+    output_csv = "http_url_results.csv"
+    results = []
+
+    with open(input_csv, newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            language = row.get("language", "en")
+            reference = row.get("text", "")
+            transcript = transcribe_url(api_key, row["audio_url"], language)
+
+            normalizer = english_normalizer if language == "en" else fallback_normalizer
+            row["transcript"] = transcript
+            row["wer"] = wer(normalizer(reference), normalizer(transcript))
+            results.append(row)
+
+    if results:
+        with open(output_csv, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=results[0].keys())
+            writer.writeheader()
+            writer.writerows(results)
+
+    avg_wer = sum(r["wer"] for r in results) / len(results)
+    print(f"Average WER: {avg_wer:.3f}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+</CodeGroup>
+
+# Block by block explanation
+
+1. **Dataset parsing** – `csv.DictReader` iterates each row, pulling `audio_path` or `audio_url` plus the ground-truth `text`.
+2. **Transcription** – POST raw bytes or audio URLs to `lightning/get_text` and capture the JSON response.
+3. **Normalization** – choose the English or fallback Whisper normalizer to clean both reference and hypothesis text.
+4. **WER calculation** – run `jiwer.wer` on normalized strings and store the score per sample.
+5. **Results export** – write the enriched rows to a CSV so dashboards can ingest transcripts and metrics.
+6. **Summary metric** – average the per-sample WER values for a quick health check.
+
+# Output format
+
+| Column       | Description                       |
+| ------------ | --------------------------------- |
+| `audio_path` | File path (or `audio_url`)        |
+| `text`       | Ground-truth reference            |
+| `transcript` | ASR hypothesis                    |
+| `wer`        | Word Error Rate for the sample    |
+
+```csv title="transcription_results.csv"
+audio_path,text,transcript,wer
+data/en_001.wav,Hello how are you doing today,hello how are you doing today,0.000
+data/en_002.wav,This is a test of speech recognition,this is a test speech recognition,0.167
+```
+
+# Benchmarks
+
+- **English (Librispeech test-clean)** – WER 5–7% with 16 kHz PCM input.
+- **Hindi / English mixed contact center audio** – WER 12–15% when redaction is enabled.
+- **Multilingual (Common Voice)** – WER typically 10–20% depending on accent coverage and microphone quality.
+
+Track WER regularly (e.g., nightly or before releases) to catch regressions early and share results with stakeholders.
+

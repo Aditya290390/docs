@@ -1,0 +1,39 @@
+---
+title: 'Word timestamps'
+description: 'Return sentence-level and word-level timing metadata from Lightning STT'
+---
+
+## Learn how to enable word timestamps
+
+Add `word_timestamps=true` to your Lightning STT query parameters. This works for both raw-byte uploads (`Content-Type: audio/wav`) and JSON requests with hosted audio URLs.
+
+## Output format & field of interest
+
+Responses include a `word_timestamps` array with `word`, `start`, `end`, and optional `speaker` labels (when diarization is enabled). Use these offsets to generate captions, subtitle tracks, or to align transcripts with downstream analytics.
+
+## Sample request
+
+```bash
+curl --request POST \
+  --url "https://waves-api.smallest.ai/api/v1/lightning/get_text?model=lightning&language=en&word_timestamps=true" \
+  --header "Authorization: Bearer $SMALLEST_API_KEY" \
+  --header "Content-Type: audio/wav" \
+  --data-binary "@/path/to/audio.wav"
+```
+
+## Sample response
+
+```json
+{
+  "status": "success",
+  "transcription": "Hello world.",
+  "word_timestamps": [
+    { "word": "Hello", "start": 0.0, "end": 0.5, "speaker": "speaker_0" },
+    { "word": "world.", "start": 0.6, "end": 0.9, "speaker": "speaker_0" }
+  ],
+  "utterances": [
+    { "text": "Hello world.", "start": 0.0, "end": 0.9, "speaker": "speaker_0" }
+  ]
+}
+```
+

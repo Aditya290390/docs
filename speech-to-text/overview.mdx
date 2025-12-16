@@ -1,0 +1,77 @@
+---
+title: 'Overview'
+description: 'Understand Lightning ASR capabilities, pricing, and key resources'
+icon: 'waveform-lines'
+---
+
+# Overview
+
+> Fastest real-time speech-to-text transcription over HTTPS using the Lightning ASR API.
+
+The Waves Automatic Speech Recognition (ASR) stack processes audio via `https://waves-api.smallest.ai/api/v1/lightning/get_text` and returns low-latency transcripts with configurable languages, formats, and pricing tiers suited for enterprise deployments. 
+
+## Introduction & use cases
+
+- **Customer analytics** – process recorded calls or meetings to unlock insights, QA, and compliance workflows.
+- **Productivity tooling** – convert lectures, podcasts, and field audio into searchable text for downstream AI systems.
+
+## Feature highlights
+
+- **Lightning POST API** – upload raw audio or reference hosted files; receive transcripts with word-level timing.
+- **30+ languages** – automatic language detection (`language=multi`) or ISO 639-1 codes (`en`, `es`, `hi`, etc.).
+- **Rich metadata** – optional diarization, age/gender prediction, emotion scores, file metadata, and utterance segmentation.
+- **Security & controls** – Bearer-token authentication, enterprise subscription tiers.
+- **Low latency** – streaming pipeline tuned for ~64 ms end-to-end processing latency.
+
+## Supported languages
+
+| Language   | Code |
+| ---------- | ---- |
+| Italian    | `it` |
+| Spanish    | `es` |
+| English    | `en` |
+| Portuguese | `pt` |
+| Hindi      | `hi` |
+| German     | `de` |
+| French     | `fr` |
+| Ukrainian  | `uk` |
+| Russian    | `ru` |
+| Kannada    | `kn` |
+| Malayalam  | `ml` |
+| Polish     | `pl` |
+| Marathi    | `mr` |
+| Gujarati   | `gu` |
+| Czech      | `cs` |
+| Slovak     | `sk` |
+| Telugu     | `te` |
+| Oriya (Odia) | `or` |
+| Dutch      | `nl` |
+| Bengali    | `bn` |
+| Latvian    | `lv` |
+| Estonian   | `et` |
+| Romanian   | `ro` |
+| Punjabi    | `pa` |
+| Finnish    | `fi` |
+| Swedish    | `sv` |
+| Bulgarian  | `bg` |
+| Tamil      | `ta` |
+| Hungarian  | `hu` |
+| Danish     | `da` |
+| Lithuanian | `lt` |
+| Maltese    | `mt` |
+
+Use `language=multi` to auto-detect across the full list or specify one of the codes above to pin the model to a single language.
+
+## Typical workflow
+
+1. **Capture audio** – record 16 kHz mono PCM or reuse archived media.
+2. **Submit to Lightning** – pick raw bytes or JSON URL workflows.
+3. **Receive transcripts** – parse the JSON payload for `transcription`, `word_timestamps`, and `utterances`.
+4. **Enrich & store** – use metadata to power analytics, search, and compliance dashboards.
+
+## Next steps
+
+- Send your first POST request in the [Lightning quickstart](/speech-to-text/developer-guides/getting-started).
+- Review [best practices](/speech-to-text/developer-guides/best-practices) for audio prep and request hygiene.
+- Use the [troubleshooting guide](/speech-to-text/developer-guides/troubleshooting) when you need quick fixes.
+

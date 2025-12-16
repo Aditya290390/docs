@@ -1,0 +1,161 @@
+---
+title: 'Lightning ASR CLI examples'
+description: 'Call the Lightning ASR POST API from Python and JavaScript CLIs'
+---
+
+# CLI-based Lightning ASR calls
+
+> Use simple command-line scripts to send raw audio bytes or hosted audio URLs to the Lightning ASR POST endpoint.
+
+This guide shows Python and Node.js snippets you can adapt for cron jobs, CI pipelines, or ad-hoc evaluations.
+
+## Prerequisites
+
+- API key stored as `SMALLEST_API_KEY`
+- Python 3.9+ with `requests`
+- Node.js 18+ (or Deno/Bun) with `node-fetch` or native `fetch`
+
+## Python CLI (raw bytes)
+
+```python title="lightning_raw.py"
+import os
+import argparse
+import requests
+
+API_URL = "https://waves-api.smallest.ai/api/v1/lightning/get_text"
+
+
+def transcribe(path: str, language: str = "en"):
+    params = {
+        "model": "lightning",
+        "language": language,
+        "word_timestamps": "true",
+        "diarize": "true",
+        "age_detection": "true",
+        "gender_detection": "true",
+        "emotion_detection": "true",
+    }
+    headers = {
+        "Authorization": f"Bearer {os.environ['SMALLEST_API_KEY']}",
+        "Content-Type": "audio/wav",
+    }
+    with open(path, "rb") as audio:
+        resp = requests.post(API_URL, params=params, headers=headers, data=audio.read(), timeout=180)
+    resp.raise_for_status()
+    return resp.json()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--file", required=True, help="Path to WAV/FLAC/MP3 file")
+    parser.add_argument("--language", default="en", help="ISO 639-1 code or 'multi'")
+    args = parser.parse_args()
+
+    data = transcribe(args.file, args.language)
+    print(data["transcription"])
+```
+
+## Python CLI (audio URL)
+
+```python title="lightning_url.py"
+import os
+import argparse
+import json
+import requests
+
+API_URL = "https://waves-api.smallest.ai/api/v1/lightning/get_text"
+
+
+def transcribe_url(url: str, language: str = "multi"):
+    params = {
+        "model": "lightning",
+        "language": language,
+        "word_timestamps": "true",
+        "diarize": "true",
+    }
+    headers = {
+        "Authorization": f"Bearer {os.environ['SMALLEST_API_KEY']}",
+        "Content-Type": "application/json",
+    }
+    resp = requests.post(API_URL, params=params, headers=headers, data=json.dumps({"url": url}), timeout=180)
+    resp.raise_for_status()
+    return resp.json()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--url", required=True, help="Public URL to an audio file")
+    parser.add_argument("--language", default="multi")
+    args = parser.parse_args()
+
+    data = transcribe_url(args.url, args.language)
+    print(data["transcription"])
+```
+
+## Node.js CLI
+
+```javascript title="lightning-cli.mjs"
+import fs from "node:fs";
+import fetch from "node-fetch";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+
+const argv = yargs(hideBin(process.argv))
+  .option("file", { type: "string", describe: "Path to local audio file" })
+  .option("url", { type: "string", describe: "Remote audio URL" })
+  .option("language", { type: "string", default: "multi" })
+  .demandOption(["language"])
+  .check((args) => (args.file || args.url ? true : "Provide --file or --url"))
+  .parse();
+
+const endpoint = "https://waves-api.smallest.ai/api/v1/lightning/get_text";
+const params = new URLSearchParams({
+  model: "lightning",
+  language: argv.language,
+  word_timestamps: "true",
+  diarize: "true",
+});
+
+const headers = {
+  Authorization: `Bearer ${process.env.SMALLEST_API_KEY}`,
+};
+
+let body;
+if (argv.file) {
+  headers["Content-Type"] = "audio/wav";
+  body = fs.readFileSync(argv.file);
+} else {
+  headers["Content-Type"] = "application/json";
+  body = JSON.stringify({ url: argv.url });
+}
+
+const response = await fetch(`${endpoint}?${params.toString()}`, {
+  method: "POST",
+  headers,
+  body,
+});
+
+if (!response.ok) throw new Error(await response.text());
+const data = await response.json();
+console.log(data.transcription);
+```
+
+## Block-by-block highlights
+
+1. **Params**: the Lightning API reads all options (model, language, timestamps, diarization, enrichment flags) from query parameters regardless of body type.
+2. **Headers**: raw bytes require the appropriate audio `Content-Type`, whereas URL requests use `application/json`.
+3. **Timeouts & retries**: long recordings can take up to the audio duration; set generous HTTP timeouts and implement retries on `429` or `500`.
+4. **Output**: log `transcription`, `word_timestamps`, and `utterances`, or write the full JSON to disk for later analysis.
+
+## Packaging as a CLI
+
+Expose the scripts with simple wrappers:
+
+```bash
+python lightning_raw.py --file demo.wav --language en
+python lightning_url.py --url https://storage.example.com/audio.mp3 --language multi
+node lightning-cli.mjs --file demo.wav
+```
+
+Add `--json` or `--out` flags to write the full response to disk, and pipe the transcription to downstream tooling (e.g., `jq`, `rg`, `grep`) for automation.
+

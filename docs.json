@@ -13,27 +13,37 @@
         "tab": "Documentation",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Speech to text (Lightning ASR)",
             "pages": [
-              "getting-started/authentication-and-first-api-call"
+              "speech-to-text/overview",
+              {
+                "group": "Developer guides",
+                "icon": "code",
+                "expanded": true,
+                "pages": [
+                  "speech-to-text/developer-guides/getting-started",
+                  "speech-to-text/developer-guides/features",
+                  "speech-to-text/developer-guides/audio-prep",
+                  "speech-to-text/developer-guides/best-practices",
+                  "speech-to-text/developer-guides/troubleshooting"
+                ]
+              },
+              {
+                "group": "Evaluation",
+                "icon": "chart-line",
+                "expanded": false,
+                "pages": [
+                  "speech-to-text/evaluation/overview",
+                  "speech-to-text/evaluation/how-to"
+                ]
+              }
             ]
           }
         ]
       }
     ],
     "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://waves-docs.smallest.ai/v4.0.0/content/introduction/introduction",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://smallest.ai/blog",
-          "icon": "newspaper"
-        }
-      ]
+      
     }
   },
   "logo": {

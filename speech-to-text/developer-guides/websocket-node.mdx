@@ -1,0 +1,63 @@
+---
+title: 'ASR WebSocket – Node.js'
+description: 'Build server-side streaming clients with the Waves ASR WebSocket API'
+---
+
+# Node.js WebSocket example
+
+> Stream audio to Waves ASR from a Node.js environment using the `ws` client.
+
+This guide extends the core [ASR WebSocket API](/speech-to-text/developer-guides/websocket-api) documentation with a production-ready Node.js sample that reads Opus audio from disk, pushes it over the socket, and prints incremental transcripts.
+
+## Prerequisites
+
+- Node.js 18+
+- `npm install ws dotenv`
+- Audio file encoded as Opus, linear16, FLAC, or μ-law
+- `SMALLEST_API_KEY` stored in `.env`
+
+## Implementation
+
+```typescript server.ts
+import WebSocket from "ws";
+import fs from "node:fs";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const url = "wss://waves-api.smallest.ai/api/v1/asr?language=en&format=opus";
+const ws = new WebSocket(url, {
+  headers: { Authorization: `Bearer ${process.env.SMALLEST_API_KEY}` },
+});
+
+ws.on("open", () => {
+  const stream = fs.createReadStream("sample.opus");
+  stream.on("data", (chunk) => ws.send(chunk));
+  stream.on("end", () => ws.send(JSON.stringify({ type: "end_of_turn" })));
+});
+
+ws.on("message", (msg) => {
+  const payload = JSON.parse(msg.toString());
+  if (payload.text) {
+    console.log(`[${payload.type ?? "partial"}] ${payload.text}`);
+  }
+});
+
+ws.on("error", console.error);
+```
+
+## Block-by-block explanation
+
+1. **Connection** – builds the WebSocket URL with format/language parameters and injects the `Authorization` header.
+2. **Streaming** – reads the audio file with `fs.createReadStream` and forwards chunks as they arrive.
+3. **End of turn** – sends `{ type: "end_of_turn" }` when the file ends so the service finalizes the transcript.
+4. **Messages** – parses JSON payloads to access `text`, `type` (`partial` or `final`), and additional metadata.
+5. **Errors** – logs socket failures; add retries/backoff for production workloads.
+
+## Enhancements
+
+- Replace `fs.createReadStream` with live microphone or telephony feeds.
+- Add exponential backoff and jitter for transient network failures.
+- Persist transcripts to a datastore or forward them to downstream analytics pipelines.
+
+

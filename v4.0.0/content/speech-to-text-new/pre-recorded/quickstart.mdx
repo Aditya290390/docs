@@ -1,0 +1,125 @@
+---
+title: 'Quickstart'
+description: 'Get started with transcribing pre-recorded audio files using the Waves STT API'
+---
+
+This guide will show you how to convert an audio file into with the Smallest AI's Lighting STT model.
+
+# Pre-Recorded Audio
+
+> Transcribe pre-recorded audio files using synchronous HTTPS POST requests. Perfect for batch processing, archived media, and offline transcription workflows.
+
+The Pre-Recorded API allows you to upload audio files and receive complete transcripts in a single request. This is ideal for processing existing audio files, batch operations, and scenarios where you don't need real-time streaming.
+
+## When to Use Pre-Recorded Transcription
+
+- **Batch processing**: Transcribe multiple audio files at once
+- **Archived media**: Process existing recordings, podcasts, or videos
+- **Offline workflows**: Upload files that are already stored locally or in cloud storage
+- **Complete transcripts**: When you need the full transcription before proceeding
+
+## Endpoint
+
+```
+POST https://waves-api.smallest.ai/api/v1/lightning/get_text
+```
+
+## Authentication
+
+Head over to the [smallest console](https://console.smallest.ai/apikeys) to generate an API key if not done previously. Also look at [Authentication guide](/v4.0.0/content/getting-started/authentication) for more information about API keys and their usage.
+
+
+Include your API key in the Authorization header:
+
+```http
+Authorization: Bearer YOUR_API_KEY
+```
+
+## Example Request
+
+<CodeGroup>
+```bash cURL
+curl --request POST \
+  --url "https://waves-api.smallest.ai/api/v1/lightning/get_text?model=lightning&language=en&word_timestamps=true" \
+  --header "Authorization: Bearer $SMALLEST_API_KEY" \
+  --header "Content-Type: audio/wav" \
+  --data-binary "@/path/to/audio.wav"
+```
+
+```python Python
+import os
+import requests
+
+API_KEY = os.environ["SMALLEST_API_KEY"]
+endpoint = "https://waves-api.smallest.ai/api/v1/lightning/get_text"
+params = {
+    "model": "lightning",
+    "language": "en",
+    "word_timestamps": "true",
+}
+headers = {
+    "Authorization": f"Bearer {API_KEY}",
+    "Content-Type": "audio/wav",
+}
+
+with open("sample.wav", "rb") as audio:
+    response = requests.post(endpoint, params=params, headers=headers, data=audio.read(), timeout=120)
+
+response.raise_for_status()
+result = response.json()
+print(result["transcription"])
+```
+
+```javascript JavaScript
+import fetch from "node-fetch";
+import fs from "fs";
+
+const endpoint = "https://waves-api.smallest.ai/api/v1/lightning/get_text";
+const params = new URLSearchParams({
+  model: "lightning",
+  language: "en",
+  word_timestamps: "true",
+});
+
+const audioBuffer = fs.readFileSync("sample.wav");
+
+const response = await fetch(`${endpoint}?${params}`, {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${process.env.SMALLEST_API_KEY}`,
+    "Content-Type": "audio/wav",
+  },
+  body: audioBuffer,
+});
+
+if (!response.ok) throw new Error(await response.text());
+const data = await response.json();
+console.log(data.transcription);
+```
+</CodeGroup>
+
+## Example Response
+
+A successful request returns a JSON object with the transcription and metadata:
+
+```json
+{
+  "transcription": "Hello, this is a test transcription.",
+  "word_timestamps": [
+    {"word": "Hello", "start": 0.0, "end": 0.5},
+    {"word": "this", "start": 0.6, "end": 0.8}
+  ],
+  "metadata": {
+    "duration": 3.5,
+    "file_size": 123456
+  }
+}
+```
+
+## Next Steps
+
+- Learn about [supported audio formats](/v4.0.0/content/speech-to-text-new/pre-recorded/audio-formats).
+- Decide which enrichment options to enable in the [features guide](/v4.0.0/content/speech-to-text-new/features/language-detection).
+- Configure asynchronous callbacks with [webhooks](/v4.0.0/content/speech-to-text-new/pre-recorded/webhooks).
+- Review a full [code example](/v4.0.0/content/speech-to-text-new/pre-recorded/code-examples) here.
+

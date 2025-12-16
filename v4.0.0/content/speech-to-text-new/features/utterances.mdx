@@ -1,0 +1,35 @@
+---
+title: 'Sentence-level timestamps'
+description: 'Use the utterances array to capture longer segments with speaker labels'
+---
+
+## Learn how to enable sentence-level timestamps
+
+Set `word_timestamps=true` in your Lightning STT query parameters. When diarization or timestamps are enabled, the response includes an `utterances` array that aggregates contiguous words into sentence-level segments.
+
+## Output format & field of interest
+
+Each `utterances` entry contains `text`, `start`, `end`, and optional `speaker` fields. Use these sentence-level timestamps when you need to display readable captions, synchronize larger chunks of audio, or store structured call summaries.
+
+## Sample request
+
+```bash
+curl --request POST \
+  --url "https://waves-api.smallest.ai/api/v1/lightning/get_text?model=lightning&language=en&word_timestamps=true&diarize=true" \
+  --header "Authorization: Bearer $SMALLEST_API_KEY" \
+  --header "Content-Type: audio/wav" \
+  --data-binary "@/path/to/audio.wav"
+```
+
+## Sample response
+
+```json
+{
+  "transcription": "Hello world. How are you?",
+  "utterances": [
+    { "text": "Hello world.", "start": 0.0, "end": 0.9, "speaker": "speaker_0" },
+    { "text": "How are you?", "start": 1.0, "end": 2.1, "speaker": "speaker_1" }
+  ]
+}
+```
+

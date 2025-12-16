@@ -1,0 +1,296 @@
+{
+  "asyncapi": "3.0.0",
+  "info": {
+    "title": "Waves Lightning ASR (Speech-to-Text) API",
+    "version": "1.0.0",
+    "description": "WebSocket-based streaming automatic speech recognition API for real-time speech transcription using the Lightning ASR model",
+    "contact": {
+      "name": "Waves API Support",
+      "url": "https://waves-api.smallest.ai/support",
+      "email": "support@smallest.ai"
+    },
+    "license": {
+      "name": "Proprietary"
+    }
+  },
+  "servers": {
+    "production": {
+      "host": "waves-api.smallest.ai",
+      "pathname": "/api/v1/lightning/get_text",
+      "protocol": "wss",
+      "description": "Production WebSocket Lightning ASR endpoint",
+      "security": [
+        {
+          "$ref": "#/components/securitySchemes/bearerAuth"
+        }
+      ],
+      "bindings": {
+        "ws": {
+          "query": {
+            "type": "object",
+            "properties": {
+              "language": {
+                "type": "string",
+                "enum": [
+                  "it", "es", "en", "pt", "hi", "de", "fr", "uk", "ru", "kn", "ml", 
+                  "pl", "mr", "gu", "cs", "sk", "te", "or", "nl", "bn", "lv", "et", 
+                  "ro", "pa", "fi", "sv", "bg", "ta", "hu", "da", "lt", "mt", "multi"
+                ],
+                "default": "en",
+                "description": "Language code for transcription. Use 'multi' for automatic language detection"
+              },
+              "encoding": {
+                "type": "string",
+                "enum": ["linear16", "linear32", "alaw", "mulaw"],
+                "default": "linear16",
+                "description": "Audio encoding format"
+              },
+              "sample_rate": {
+                "type": "string",
+                "enum": ["8000", "16000", "22050", "24000", "44100", "48000"],
+                "default": "16000",
+                "description": "Audio sample rate in Hz"
+              },
+              "word_timestamps": {
+                "type": "string",
+                "enum": ["true", "false"],
+                "default": "false",
+                "description": "Include word-level timestamps in transcription"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "channels": {
+    "/api/v1/lightning/get_text": {
+      "address": "/api/v1/lightning/get_text",
+      "messages": {
+        "audioData.message": {
+          "name": "AudioData",
+          "contentType": "application/octet-stream",
+          "payload": {
+            "type": "string",
+            "format": "binary",
+            "description": "Raw audio data chunk in the specified encoding format",
+            "examples": [
+              "Binary audio data chunk (4096 bytes recommended)"
+            ]
+          }
+        },
+        "endSignal.message": {
+          "name": "EndSignal",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["end"],
+                "description": "Signal to indicate end of audio stream"
+              }
+            },
+            "examples": [
+              {
+                "type": "end"
+              }
+            ]
+          }
+        },
+        "transcriptionResponse.message": {
+          "name": "TranscriptionResponse",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "required": ["session_id"],
+            "properties": {
+              "session_id": {
+                "type": "string",
+                "description": "Unique identifier for the transcription session"
+              },
+              "transcript": {
+                "type": "string",
+                "description": "Partial or complete transcription text for the current segment"
+              },
+              "full_transcript": {
+                "type": "string",
+                "description": "Complete transcription text accumulated so far"
+              },
+              "is_final": {
+                "type": "boolean",
+                "default": false,
+                "description": "Indicates if this is the final transcription for the current segment"
+              },
+              "is_last": {
+                "type": "boolean",
+                "default": false,
+                "description": "Indicates if this is the last transcription in the session"
+              },
+              "word_timestamps": {
+                "type": "array",
+                "description": "Word-level timestamps (when word_timestamps=true)",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "word": {
+                      "type": "string",
+                      "description": "The transcribed word"
+                    },
+                    "start": {
+                      "type": "number",
+                      "description": "Start time in seconds"
+                    },
+                    "end": {
+                      "type": "number",
+                      "description": "End time in seconds"
+                    }
+                  }
+                }
+              },
+              "language": {
+                "type": "string",
+                "description": "Detected language code"
+              }
+            },
+            "examples": [
+              {
+                "session_id": "sess_12345abcde",
+                "transcript": "Hello, how are you?",
+                "full_transcript": "Hello, how are you?",
+                "is_final": true,
+                "is_last": false,
+                "language": "en"
+              },
+              {
+                "session_id": "sess_12345abcde",
+                "transcript": "I'm doing great, thank you!",
+                "full_transcript": "Hello, how are you? I'm doing great, thank you!",
+                "is_final": true,
+                "is_last": true,
+                "word_timestamps": [
+                  {
+                    "word": "I'm",
+                    "start": 1.2,
+                    "end": 1.4
+                  },
+                  {
+                    "word": "doing",
+                    "start": 1.4,
+                    "end": 1.7
+                  },
+                  {
+                    "word": "great",
+                    "start": 1.7,
+                    "end": 2.0
+                  }
+                ],
+                "language": "en"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "operations": {
+    "sendAudioData": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/~1api~1v1~1lightning~1get_text"
+      },
+      "summary": "Send audio data for transcription",
+      "description": "Stream audio data in chunks for real-time transcription",
+      "messages": [
+        {
+          "$ref": "#/channels/~1api~1v1~1lightning~1get_text/messages/audioData.message"
+        }
+      ]
+    },
+    "sendEndSignal": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/~1api~1v1~1lightning~1get_text"
+      },
+      "summary": "Send end of stream signal",
+      "description": "Signal that audio streaming is complete",
+      "messages": [
+        {
+          "$ref": "#/channels/~1api~1v1~1lightning~1get_text/messages/endSignal.message"
+        }
+      ]
+    },
+    "receiveTranscription": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/~1api~1v1~1lightning~1get_text"
+      },
+      "summary": "Receive transcription results",
+      "description": "Get real-time transcription results as audio is processed",
+      "messages": [
+        {
+          "$ref": "#/channels/~1api~1v1~1lightning~1get_text/messages/transcriptionResponse.message"
+        }
+      ]
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Bearer token authentication using Smallest AI API key"
+      }
+    },
+    "schemas": {
+      "TranscriptionResult": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "description": "Unique identifier for the transcription session"
+          },
+          "transcript": {
+            "type": "string",
+            "description": "Transcribed text"
+          },
+          "full_transcript": {
+            "type": "string",
+            "description": "Complete transcription accumulated"
+          },
+          "is_final": {
+            "type": "boolean",
+            "description": "Final transcription flag"
+          },
+          "is_last": {
+            "type": "boolean",
+            "description": "Last transcription flag"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["error"]
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,308 @@
+---
+title: "Lightning (Realtime)"
+description: The Lightning ASR WebSocket API provides real-time speech-to-text transcription capabilities with streaming audio input. This API uses WebSocket to deliver transcription results as audio is processed, enabling low-latency transcription without waiting for the entire audio file to upload. Perfect for live transcription, voice assistants, and real-time communication systems that require immediate speech recognition. Supports multiple languages, speaker diarization, emotion detection, and more advanced features.
+asyncapi: "/asyncapi-spec/lightning-asr-ws.json /api/v1/lightning/get_text"
+---
+
+## Query Parameters
+
+The WebSocket connection accepts the following query parameters:
+
+### Audio Configuration
+
+| Parameter     | Type   | Default    | Description                                                                           |
+| ------------- | ------ | ---------- | ------------------------------------------------------------------------------------- |
+| `encoding`    | string | `linear16` | Audio encoding format. Options: `linear16`, `linear32`, `alaw`, `mulaw`               |
+| `sample_rate` | string | `16000`    | Audio sample rate in Hz. Options: `8000`, `16000`, `22050`, `24000`, `44100`, `48000` |
+
+### Language & Detection
+
+| Parameter  | Type   | Default | Description                                                                                                                                                                                                                                                                                       |
+| ---------- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `language` | string | `en`    | Language code for transcription. Use `multi` for automatic language detection. Supported: `it`, `es`, `en`, `pt`, `hi`, `de`, `fr`, `uk`, `ru`, `kn`, `ml`, `pl`, `mr`, `gu`, `cs`, `sk`, `te`, `or`, `nl`, `bn`, `lv`, `et`, `ro`, `pa`, `fi`, `sv`, `bg`, `ta`, `hu`, `da`, `lt`, `mt`, `multi` |
+
+### Feature Flags
+
+| Parameter           | Type   | Default | Description                                                              |
+| ------------------- | ------ | ------- | ------------------------------------------------------------------------ |
+| `word_timestamps`   | string | `false` | Include word-level timestamps in transcription. Options: `true`, `false` |
+
+### Webhook Configuration
+
+## Connection Flow
+
+### Example Connection URL
+
+```javascript
+const url = new URL("wss://waves-api.smallest.ai/api/v1/lightning/get_text");
+url.searchParams.append("language", "en");
+url.searchParams.append("encoding", "linear16");
+url.searchParams.append("sample_rate", "16000");
+url.searchParams.append("word_timestamps", "true");
+
+const ws = new WebSocket(url.toString(), {
+  headers: {
+    Authorization: `Bearer ${API_KEY}`,
+  },
+});
+```
+
+## Input Messages
+
+### Audio Data (Binary)
+
+Send raw audio bytes as binary WebSocket messages:
+
+```javascript
+const audioChunk = new Uint8Array(4096);
+ws.send(audioChunk);
+```
+
+### End Signal (JSON)
+
+Signal the end of audio stream:
+
+```json
+{
+  "type": "end"
+}
+```
+
+## Response Format
+
+The server responds with JSON messages containing transcription results:
+
+```json
+{
+  "session_id": "sess_12345abcde",
+  "transcript": "Hello, how are you?",
+  "full_transcript": "Hello, how are you?",
+  "is_final": true,
+  "is_last": false,
+  "language": "en"
+}
+```
+
+### Response Fields
+
+| Field             | Type    | Description                                                          |
+| ----------------- | ------- | -------------------------------------------------------------------- |
+| `session_id`      | string  | Unique identifier for the transcription session                      |
+| `transcript`      | string  | Partial or complete transcription text for the current segment       |
+| `full_transcript` | string  | Complete transcription text accumulated so far                       |
+| `is_final`        | boolean | Indicates if this is the final transcription for the current segment |
+| `is_last`         | boolean | Indicates if this is the last transcription in the session           |
+| `language`        | string  | Detected language code, returns only when `is_final=True`                                               |
+
+### Optional Response Fields (Based on Query Parameters)
+
+| Field             | Type   | When Included            | Description                                                            |
+| ----------------- | ------ | ------------------------ | ---------------------------------------------------------------------- |
+| `word_timestamps` | array  | `word_timestamps=true`   | Word-level timestamps with `word`, `start`, and `end` fields           |
+
+### Example Response with All Features
+
+```json
+{
+  "session_id": "sess_12345abcde",
+  "transcript": "I'm doing great, thank you!",
+  "full_transcript": "Hello, how are you? I'm doing great, thank you!",
+  "is_final": true,
+  "is_last": true,
+  "language": "en",
+  "word_timestamps": [
+    {
+      "word": "I'm",
+      "start": 1.2,
+      "end": 1.4
+    },
+    {
+      "word": "doing",
+      "start": 1.4,
+      "end": 1.7
+    },
+    {
+      "word": "great",
+      "start": 1.7,
+      "end": 2.0
+    }
+  ],
+```
+
+## Code Examples
+
+<CodeGroup>
+```python python
+import asyncio
+import websockets
+import json
+import os
+import pathlib
+from urllib.parse import urlencode
+
+BASE_WS_URL = "wss://waves-api.smallest.ai/api/v1/lightning/get_text"
+params = {
+    "language": "en",
+    "encoding": "linear16",
+    "sample_rate": 16000,
+    "word_timestamps": "true"
+}
+WS_URL = f"{BASE_WS_URL}?{urlencode(params)}"
+
+API_KEY = "YOUR_API_KEY"
+AUDIO_FILE = "path/to/audio.wav"
+
+async def stream_audio():
+    headers = {
+        "Authorization": f"Bearer {API_KEY}"
+    }
+
+    async with websockets.connect(WS_URL, additional_headers=headers) as ws:
+        print("Connected to ASR WebSocket")
+
+        audio_bytes = pathlib.Path(AUDIO_FILE).read_bytes()
+        chunk_size = 4096
+        offset = 0
+
+        print(f"Streaming {len(audio_bytes)} bytes from {os.path.basename(AUDIO_FILE)}")
+
+        async def send_chunks():
+            nonlocal offset
+            while offset < len(audio_bytes):
+                chunk = audio_bytes[offset: offset + chunk_size]
+                await ws.send(chunk)
+                offset += chunk_size
+                await asyncio.sleep(0.05)
+
+            print("Finished sending audio, sending end signal...")
+            await ws.send(json.dumps({"type": "end"}))
+
+        sender = asyncio.create_task(send_chunks())
+
+        try:
+            async for message in ws:
+                try:
+                    data = json.loads(message)
+                    print("Received:", json.dumps(data, indent=2))
+                except json.JSONDecodeError:
+                    print("Received raw:", message)
+        except websockets.ConnectionClosed as e:
+            print(f"Connection closed: {e.code} - {e.reason}")
+
+        await sender
+
+if __name__ == "__main__":
+    asyncio.run(stream_audio())
+```
+
+```javascript node.js
+const WebSocket = require("ws");
+const fs = require("fs");
+
+const API_KEY = "YOUR_API_KEY";
+const AUDIO_FILE = "path/to/audio.wav";
+
+const url = new URL("wss://waves-api.smallest.ai/api/v1/lightning/get_text");
+url.searchParams.append("language", "en");
+url.searchParams.append("encoding", "linear16");
+url.searchParams.append("sample_rate", "16000");
+url.searchParams.append("word_timestamps", "true");
+
+const ws = new WebSocket(url.toString(), {
+  headers: {
+    Authorization: `Bearer ${API_KEY}`,
+  },
+});
+
+ws.on("open", () => {
+  console.log("Connected to ASR WebSocket");
+
+  const audioBuffer = fs.readFileSync(AUDIO_FILE);
+  const chunkSize = 4096;
+  let offset = 0;
+
+  const sendChunk = () => {
+    if (offset >= audioBuffer.length) {
+      console.log("Finished sending audio, sending end signal...");
+      ws.send(JSON.stringify({ type: "end" }));
+      return;
+    }
+
+    const chunk = audioBuffer.slice(offset, offset + chunkSize);
+    ws.send(chunk);
+    offset += chunkSize;
+
+    setTimeout(sendChunk, 50);
+  };
+
+  sendChunk();
+});
+
+ws.on("message", (data) => {
+  const message = JSON.parse(data.toString());
+  console.log("Received:", JSON.stringify(message, null, 2));
+});
+
+ws.on("error", (error) => {
+  console.error("WebSocket error:", error.message);
+});
+
+ws.on("close", (code, reason) => {
+  console.log(`Connection closed: ${code} - ${reason}`);
+});
+```
+</CodeGroup>
+
+
+### Browser JavaScript
+
+```javascript
+const API_KEY = "YOUR_API_KEY";
+
+async function transcribeAudio(audioFile) {
+  const url = new URL("wss://waves-api.smallest.ai/api/v1/lightning/get_text");
+  url.searchParams.append("language", "en");
+  url.searchParams.append("encoding", "linear16");
+  url.searchParams.append("sample_rate", "16000");
+  url.searchParams.append("word_timestamps", "true");
+
+  const ws = new WebSocket(url.toString());
+
+  ws.onopen = async () => {
+    console.log("Connected to ASR WebSocket");
+
+    const arrayBuffer = await audioFile.arrayBuffer();
+    const chunkSize = 4096;
+    let offset = 0;
+
+    const sendChunk = () => {
+      if (offset >= arrayBuffer.byteLength) {
+        console.log("Finished sending audio");
+        ws.send(JSON.stringify({ type: "end" }));
+        return;
+      }
+
+      const chunk = arrayBuffer.slice(offset, offset + chunkSize);
+      ws.send(chunk);
+      offset += chunkSize;
+
+      setTimeout(sendChunk, 50);
+    };
+
+    sendChunk();
+  };
+
+  ws.onmessage = (event) => {
+    const message = JSON.parse(event.data);
+    console.log("Received:", message);
+  };
+
+  ws.onerror = (error) => {
+    console.error("WebSocket error:", error);
+  };
+
+  ws.onclose = (event) => {
+    console.log(`Connection closed: ${event.code}`);
+  };
+}
+```
