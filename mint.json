@@ -207,8 +207,14 @@
             "/v4.0.0/content/speech-to-text-new/realtime/quickstart",
             "/v4.0.0/content/speech-to-text-new/realtime/audio-formats",
             "/v4.0.0/content/speech-to-text-new/realtime/code-examples",
-            "/v4.0.0/content/speech-to-text-new/realtime/best-practices",
-            "/v4.0.0/content/speech-to-text-new/realtime/troubleshooting"
+            {
+              "group": "Features",
+              "pages": [
+                "/v4.0.0/content/speech-to-text-new/realtime/features/word-timestamps"
+              ]
+            },
+            "/v4.0.0/content/speech-to-text-new/realtime/troubleshooting",
+            "/v4.0.0/content/speech-to-text-new/realtime/best-practices"
           ]
         },
         {

@@ -3,18 +3,18 @@ title: 'Quickstart'
 description: 'Get started with real-time transcription using the Waves STT WebSocket API'
 ---
 
-This guide will show you how to transcribe audio in real-time using the Smallest AI's Lightning STT model using our WebSocket API.
+This guide will show you how to transcribe streaming audio using the Smallest AI's Lightning STT model using our WebSocket API. Our Lightning model provides state of the art low latencies (64ms) for TTFT (Time to First Transcript) making it ideal choice for speech to text conversion during live conversations. 
 
 # Real-Time Audio Transcription
 
-The Real-Time API allows you to stream audio data and receive transcription results as the audio is processed. This is ideal for live conversations, voice assistants, and scenarios where you need immediate transcription feedback.
+The Real-Time API allows you to stream audio data and receive transcription results as the audio is processed. This is ideal for live conversations, voice assistants, and scenarios where you need immediate transcription feedback. In such scenarios, where minimizing latency is of utmost importance, audio is streamed in chunks of a few kilobytes on a live connection.
 
 ## When to Use Real-Time Transcription
 
-- **Live conversations**: Transcribe phone calls, video conferences, or live events in real-time
-- **Voice assistants**: Build interactive voice applications that respond immediately
-- **Streaming workflows**: Process audio as it's being captured or generated
-- **Low-latency requirements**: When you need transcription results with minimal delay
+- **Live conversations**: Transcribe phone calls, video conferences, or live events.
+- **Voice assistants**: Build interactive voice applications that respond immediately.
+- **Streaming workflows**: Process audio as it is being captured or generated.
+- **Low-latency requirements**: When you need transcription results with minimal delay.
 
 ## Endpoint
 
@@ -117,14 +117,14 @@ The server responds with JSON messages containing transcription results:
 }
 ```
 
-### Response Fields
+### Analyzing the response
 
-- **`session_id`**: Unique identifier for the transcription session
-- **`transcript`**: Partial or complete transcription text for the current segment
-- **`full_transcript`**: Complete transcription text accumulated so far
-- **`is_final`**: Indicates if this is the final transcription for the current segment
-- **`is_last`**: Indicates if this is the last transcription in the session
-- **`language`**: Detected language code (only when `is_final=true`)
+- **`session_id`**: Unique identifier for the transcription session.
+- **`transcript`**: Partial or complete transcription text for the current segment.
+- **`full_transcript`**: Complete transcription text accumulated so far.
+- **`is_final`**: Indicates if this is the final transcription for the current segment.
+- **`is_last`**: Indicates if this is the last transcription in the session.
+- **`language`**: Detected language code (only when `is_final=true`).
 
 ## Streaming Audio
 

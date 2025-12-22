@@ -134,175 +134,55 @@ The server responds with JSON messages containing transcription results:
 <CodeGroup>
 ```python python
 import asyncio
-import websockets
 import json
-import os
-import pathlib
+import argparse
+import numpy as np
+import websockets
+import librosa
 from urllib.parse import urlencode
 
 BASE_WS_URL = "wss://waves-api.smallest.ai/api/v1/lightning/get_text"
-params = {
-    "language": "en",
-    "encoding": "linear16",
-    "sample_rate": 16000,
-    "word_timestamps": "true"
-}
-WS_URL = f"{BASE_WS_URL}?{urlencode(params)}"
 
-API_KEY = "YOUR_API_KEY"
-AUDIO_FILE = "path/to/audio.wav"
-
-async def stream_audio():
-    headers = {
-        "Authorization": f"Bearer {API_KEY}"
-    }
-
-    async with websockets.connect(WS_URL, additional_headers=headers) as ws:
-        print("Connected to ASR WebSocket")
-
-        audio_bytes = pathlib.Path(AUDIO_FILE).read_bytes()
-        chunk_size = 4096
-        offset = 0
-
-        print(f"Streaming {len(audio_bytes)} bytes from {os.path.basename(AUDIO_FILE)}")
-
-        async def send_chunks():
-            nonlocal offset
-            while offset < len(audio_bytes):
-                chunk = audio_bytes[offset: offset + chunk_size]
-                await ws.send(chunk)
-                offset += chunk_size
-                await asyncio.sleep(0.05)
-
-            print("Finished sending audio, sending end signal...")
+async def stream_audio(audio_file, api_key, language="en", encoding="linear16", sample_rate=16000, word_timestamps="true"):
+    params = {"language": language, "encoding": encoding, "sample_rate": sample_rate, "word_timestamps": word_timestamps}
+    ws_url = f"{BASE_WS_URL}?{urlencode(params)}"
+    
+    async with websockets.connect(ws_url, additional_headers={"Authorization": f"Bearer {api_key}"}) as ws:
+        print(f"Connected: {ws_url}")
+        
+        async def send():
+            audio, _ = librosa.load(audio_file, sr=sample_rate, mono=True)
+            chunk_size = int(0.160 * sample_rate)
+            
+            for i in range(0, len(audio), chunk_size):
+                chunk = audio[i:i + chunk_size]
+                await ws.send((chunk * 32768.0).astype(np.int16).tobytes())
+                await asyncio.sleep(len(chunk) / sample_rate)
+            
             await ws.send(json.dumps({"type": "end"}))
-
-        sender = asyncio.create_task(send_chunks())
-
-        try:
-            async for message in ws:
-                try:
-                    data = json.loads(message)
-                    print("Received:", json.dumps(data, indent=2))
-                except json.JSONDecodeError:
-                    print("Received raw:", message)
-        except websockets.ConnectionClosed as e:
-            print(f"Connection closed: {e.code} - {e.reason}")
-
+        
+        sender = asyncio.create_task(send())
+        
+        async for message in ws:
+            data = json.loads(message)
+            print("Received:", {k: v for k, v in data.items() if k != 'full_transcript'})
+            if data.get("is_last"):
+                break
+        
         await sender
 
 if __name__ == "__main__":
-    asyncio.run(stream_audio())
-```
-
-```javascript node.js
-const WebSocket = require("ws");
-const fs = require("fs");
-
-const API_KEY = "YOUR_API_KEY";
-const AUDIO_FILE = "path/to/audio.wav";
-
-const url = new URL("wss://waves-api.smallest.ai/api/v1/lightning/get_text");
-url.searchParams.append("language", "en");
-url.searchParams.append("encoding", "linear16");
-url.searchParams.append("sample_rate", "16000");
-url.searchParams.append("word_timestamps", "true");
-
-const ws = new WebSocket(url.toString(), {
-  headers: {
-    Authorization: `Bearer ${API_KEY}`,
-  },
-});
-
-ws.on("open", () => {
-  console.log("Connected to ASR WebSocket");
-
-  const audioBuffer = fs.readFileSync(AUDIO_FILE);
-  const chunkSize = 4096;
-  let offset = 0;
-
-  const sendChunk = () => {
-    if (offset >= audioBuffer.length) {
-      console.log("Finished sending audio, sending end signal...");
-      ws.send(JSON.stringify({ type: "end" }));
-      return;
-    }
-
-    const chunk = audioBuffer.slice(offset, offset + chunkSize);
-    ws.send(chunk);
-    offset += chunkSize;
-
-    setTimeout(sendChunk, 50);
-  };
-
-  sendChunk();
-});
-
-ws.on("message", (data) => {
-  const message = JSON.parse(data.toString());
-  console.log("Received:", JSON.stringify(message, null, 2));
-});
-
-ws.on("error", (error) => {
-  console.error("WebSocket error:", error.message);
-});
-
-ws.on("close", (code, reason) => {
-  console.log(`Connection closed: ${code} - ${reason}`);
-});
+    parser = argparse.ArgumentParser()
+    parser.add_argument("audio_file", nargs="?", default="path/to/audio.wav")
+    parser.add_argument("--api-key", "-k", default="your_api_key_here")
+    parser.add_argument("--language", "-l", default="en")
+    parser.add_argument("--encoding", "-e", default="linear16")
+    parser.add_argument("--sample-rate", "-sr", type=int, default=16000)
+    parser.add_argument("--word-timestamps", "-wt", default="true")
+    
+    args = parser.parse_args()
+    asyncio.run(stream_audio(args.audio_file, args.api_key, args.language, args.encoding, args.sample_rate, args.word_timestamps))
 ```
 </CodeGroup>
 
 
-### Browser JavaScript
-
-```javascript
-const API_KEY = "YOUR_API_KEY";
-
-async function transcribeAudio(audioFile) {
-  const url = new URL("wss://waves-api.smallest.ai/api/v1/lightning/get_text");
-  url.searchParams.append("language", "en");
-  url.searchParams.append("encoding", "linear16");
-  url.searchParams.append("sample_rate", "16000");
-  url.searchParams.append("word_timestamps", "true");
-
-  const ws = new WebSocket(url.toString());
-
-  ws.onopen = async () => {
-    console.log("Connected to ASR WebSocket");
-
-    const arrayBuffer = await audioFile.arrayBuffer();
-    const chunkSize = 4096;
-    let offset = 0;
-
-    const sendChunk = () => {
-      if (offset >= arrayBuffer.byteLength) {
-        console.log("Finished sending audio");
-        ws.send(JSON.stringify({ type: "end" }));
-        return;
-      }
-
-      const chunk = arrayBuffer.slice(offset, offset + chunkSize);
-      ws.send(chunk);
-      offset += chunkSize;
-
-      setTimeout(sendChunk, 50);
-    };
-
-    sendChunk();
-  };
-
-  ws.onmessage = (event) => {
-    const message = JSON.parse(event.data);
-    console.log("Received:", message);
-  };
-
-  ws.onerror = (error) => {
-    console.error("WebSocket error:", error);
-  };
-
-  ws.onclose = (event) => {
-    console.log(`Connection closed: ${event.code}`);
-  };
-}
-```

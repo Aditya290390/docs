@@ -43,20 +43,22 @@ The Lightning STT WebSocket API supports the following audio encoding formats fo
 
 ## Supported Sample Rates
 
+Sample rate is the number of times the audio signal is measured per second. A higher sample rate naturally implies audio of better detail and higher quality. However it increases the size of the audio file.
+
 The WebSocket API supports the following sample rates:
 
-- **8000 Hz** - Telephony quality
-- **16000 Hz** - Recommended for speech recognition (default)
-- **22050 Hz** - Broadcast quality
-- **24000 Hz** - Broadcast quality
-- **44100 Hz** - CD quality
-- **48000 Hz** - Professional audio
+- **8000 Hz**
+- **16000 Hz**
+- **22050 Hz**
+- **24000 Hz**
+- **44100 Hz**
+- **48000 Hz**
 
 ## Audio Requirements
 
 ### Chunk Size
 
-The recommended size is 4096 bytes per chunk.
+The recommended size is `4096 bytes` per chunk.
 
 Sending audio in consistent 4096-byte chunks helps maintain optimal latency and processing efficiency. It minimizes the tradeoff between processing latency and network latency, finding the right fit between number of requests and the size of each request.
 

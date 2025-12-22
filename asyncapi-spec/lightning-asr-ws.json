@@ -41,7 +41,7 @@
               },
               "encoding": {
                 "type": "string",
-                "enum": ["linear16", "linear32", "alaw", "mulaw"],
+                "enum": ["linear16", "linear32", "alaw", "mulaw", "opus", "ogg_opus"],
                 "default": "linear16",
                 "description": "Audio encoding format"
               },
@@ -73,7 +73,7 @@
           "payload": {
             "type": "string",
             "format": "binary",
-            "description": "Raw audio data chunk in the specified encoding format",
+            "description": "Raw audio data chunk, transmitted in binary format using the selected encoding",
             "examples": [
               "Binary audio data chunk (4096 bytes recommended)"
             ]
@@ -151,7 +151,7 @@
               },
               "language": {
                 "type": "string",
-                "description": "Detected language code"
+                "description": "Detected language code, only returned when `is_final=True`"
               }
             },
             "examples": [

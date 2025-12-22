@@ -3,10 +3,6 @@ title: 'Troubleshooting'
 description: 'Common issues and solutions for real-time WebSocket transcription'
 ---
 
-# Troubleshooting Real-Time Transcription
-
-Common issues and solutions when using the Lightning STT WebSocket API.
-
 ## Connection Issues
 
 ### Cannot Establish WebSocket Connection
@@ -175,23 +171,6 @@ Common issues and solutions when using the Lightning STT WebSocket API.
        displayFinal(message.full_transcript);
      }
    };
-   ```
-
-### Missing Word Timestamps
-
-**Symptoms**: `word_timestamps` not in response
-
-**Possible Causes**:
-- Parameter not set in URL
-- Parameter value incorrect
-
-**Solutions**:
-
-1. **Verify Parameter**:
-   ```javascript
-   // Must be string "true", not boolean
-   url.searchParams.append("word_timestamps", "true"); // Correct
-   // Not: url.searchParams.append("word_timestamps", true);
    ```
 
 ## Performance Issues
