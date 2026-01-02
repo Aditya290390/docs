@@ -1,0 +1,60 @@
+---
+title: 'Full Transcript'
+description: 'Get cumulative transcript from real-time WebSocket API'
+---
+
+The Full Transcript feature provides a cumulative transcript that accumulates all transcription text received up to the current point in the session. This is useful for maintaining a complete transcript of the entire conversation or audio stream.
+
+## Learn How to Enable Full Transcript
+
+Set `full_transcript=true` in your Lightning STT WebSocket API query parameters when connecting.
+
+### Real-Time WebSocket API
+
+```javascript
+const url = new URL("wss://waves-api.smallest.ai/api/v1/lightning/get_text");
+url.searchParams.append("language", "en");
+url.searchParams.append("encoding", "linear16");
+url.searchParams.append("sample_rate", "16000");
+url.searchParams.append("full_transcript", "true");
+
+const ws = new WebSocket(url.toString(), {
+  headers: {
+    Authorization: `Bearer ${API_KEY}`,
+  },
+});
+```
+
+## Output Format & Field of Interest
+
+The `full_transcript` field contains the complete transcription text accumulated from the beginning of the session. This field is only included in responses where `is_final=true`, ensuring you receive the complete transcript only when a segment is finalized.
+
+## Sample Response
+
+```json
+{
+  "session_id": "sess_12345abcde",
+  "transcript": "[CREDITCARDCVV_1] and expiry [TIME_2] slash 34.",
+  "is_final": true,
+  "is_last": true,
+  "full_transcript": "Hi, my name is [FIRSTNAME_1] [FIRSTNAME_2] You can reach me at [PHONENUMBER_1] and I paid using my Visa card [ZIPCODE_1] [ACCOUNTNUMBER_1] with [CREDITCARDCVV_1] and expiry [TIME_1].",
+  "language": "en",
+  "languages": ["en"]
+}
+```
+
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `full_transcript` | string | Complete transcription text accumulated from the start of the session. Only present when `full_transcript=true` query parameter is set AND `is_final=true` |
+| `transcript` | string | Partial or complete transcription text for the current segment |
+| `is_final` | boolean | Indicates if this is the final transcription for the current segment |
+
+## Use Cases
+
+- **Conversation logs**: Maintain a complete transcript of an entire conversation or session
+- **Call recording summaries**: Build full transcripts for recorded calls
+- **Real-time monitoring**: Track the complete transcription progress during live streams
+- **Analytics**: Analyze complete conversation context rather than individual segments
+

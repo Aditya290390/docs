@@ -1,0 +1,98 @@
+---
+title: 'Numeric Formatting'
+description: 'Control how numbers are formatted in transcriptions'
+---
+
+Numeric Formatting allows you to control how numbers, dates, and numerical values are represented in transcription output. You can choose between spelled-out numbers or numeric digits based on your application's requirements.
+
+## Learn How to Enable Numeric Formatting
+
+Add a `numeric` parameter in the query string set to `true` or `false` to control numeric formatting.
+
+### Pre-Recorded API
+
+```bash
+# Enable numeric formatting (numbers as digits)
+curl --request POST \
+  --url "https://waves-api.smallest.ai/api/v1/lightning/get_text?model=lightning&language=en&numeric=true" \
+  --header "Authorization: Bearer $SMALLEST_API_KEY" \
+  --header "Content-Type: audio/wav" \
+  --data-binary "@/path/to/audio.wav"
+```
+
+```bash
+# Disable numeric formatting (numbers as words)
+curl --request POST \
+  --url "https://waves-api.smallest.ai/api/v1/lightning/get_text?model=lightning&language=en&numeric=false" \
+  --header "Authorization: Bearer $SMALLEST_API_KEY" \
+  --header "Content-Type: audio/wav" \
+  --data-binary "@/path/to/audio.wav"
+```
+
+### Real-Time WebSocket API
+
+```javascript
+const url = new URL("wss://waves-api.smallest.ai/api/v1/lightning/get_text");
+url.searchParams.append("language", "en");
+url.searchParams.append("encoding", "linear16");
+url.searchParams.append("sample_rate", "16000");
+url.searchParams.append("numeric", "true"); // or "false"
+
+const ws = new WebSocket(url.toString(), {
+  headers: {
+    Authorization: `Bearer ${API_KEY}`,
+  },
+});
+```
+
+## Formatting Options
+
+### `numeric=true` (Numeric Format)
+
+When enabled, numbers are transcribed as digits:
+
+- **"25"** instead of "twenty-five"
+- **"$1,234.56"** instead of "one thousand two hundred thirty-four dollars and fifty-six cents"
+- **"3:45 PM"** instead of "three forty-five P M"
+- **"2024"** instead of "twenty twenty-four"
+- **"1.5"** instead of "one point five"
+
+### `numeric=false` (Spelled-Out Format)
+
+When disabled, numbers are transcribed as words (default behavior):
+
+- **"twenty-five"** instead of "25"
+- **"one thousand two hundred thirty-four"** instead of "1234"
+- **"three forty-five"** instead of "3:45"
+- **"twenty twenty-four"** instead of "2024"
+
+## Sample Response
+
+### With `numeric=true`
+
+```json
+{
+  "status": "success",
+  "transcription": "The price is $25.99 and we have 42 items in stock. Call us at 555-1234.",
+  "metadata": {
+    "filename": "audio.wav",
+    "duration": 3.5
+  }
+}
+```
+
+### With `numeric=false` (default)
+
+```json
+{
+  "status": "success",
+  "transcription": "The price is twenty-five dollars and ninety-nine cents and we have forty-two items in stock. Call us at five five five one two three four.",
+  "metadata": {
+    "filename": "audio.wav",
+    "duration": 3.5
+  }
+}
+```
+
+If not specified, `numeric=false` (spelled-out) is typically used.
+

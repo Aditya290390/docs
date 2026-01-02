@@ -8,7 +8,7 @@ description: 'Automatically detect and transcribe 30+ languages with Lightning S
 Set the `language` query parameter to `multi` when calling `https://waves-api.smallest.ai/api/v1/lightning/get_text`. Lightning STT will auto-detect the spoken language across 30+ ISO 639-1 codes without changing your request body, whether you upload raw audio bytes or send a hosted URL.
 ## Output format & field of interest
 
-When language detection is enabled, the `transcription`, `word_timestamps`, and `utterances` arrays are emitted in the detected language. Persist the detected locale in your app by storing the `language` parameter you supplied (for auditing) and by inspecting downstream metadata such as subtitles or captions that inherit the localized transcript.
+When language detection is enabled, the `transcription`, `words`, and `utterances` arrays are emitted in the detected language. Persist the detected locale in your app by storing the `language` parameter you supplied (for auditing) and by inspecting downstream metadata such as subtitles or captions that inherit the localized transcript.
 
 ## Sample request
 
@@ -26,9 +26,9 @@ curl --request POST \
 {
   "status": "success",
   "transcription": "Hola mundo.",
-  "word_timestamps": [
-    { "word": "Hola", "start": 0.0, "end": 0.4 },
-    { "word": "mundo.", "start": 0.5, "end": 0.9 }
+  "words": [
+    { "start": 0.0, "end": 0.4, "word": "Hola" },
+    { "start": 0.5, "end": 0.9, "word": "mundo." }
   ],
   "utterances": [
     { "text": "Hola mundo.", "start": 0.0, "end": 0.9 }

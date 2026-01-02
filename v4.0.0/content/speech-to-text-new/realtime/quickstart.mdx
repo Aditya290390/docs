@@ -51,7 +51,7 @@ const ws = new WebSocket(url.toString(), {
 });
 
 ws.onopen = () => {
-  console.log("Connected to ASR WebSocket");
+  console.log("Connected to STT WebSocket");
   // Start streaming audio chunks
 };
 
@@ -86,7 +86,7 @@ async def connect():
     }
     
     async with websockets.connect(WS_URL, additional_headers=headers) as ws:
-        print("Connected to ASR WebSocket")
+        print("Connected to STT WebSocket")
         
         # Send audio chunks
         # audio_chunk = b"..."
@@ -117,14 +117,7 @@ The server responds with JSON messages containing transcription results:
 }
 ```
 
-### Analyzing the response
-
-- **`session_id`**: Unique identifier for the transcription session.
-- **`transcript`**: Partial or complete transcription text for the current segment.
-- **`full_transcript`**: Complete transcription text accumulated so far.
-- **`is_final`**: Indicates if this is the final transcription for the current segment.
-- **`is_last`**: Indicates if this is the last transcription in the session.
-- **`language`**: Detected language code (only when `is_final=true`).
+For detailed information about response fields, see the [response format documentation](/v4.0.0/content/speech-to-text-new/realtime/response-format).
 
 ## Streaming Audio
 

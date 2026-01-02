@@ -1,0 +1,100 @@
+---
+title: 'Word Boosting'
+description: 'Improve recognition accuracy for important keyterms, product names, and industry jargon'
+---
+
+Word Boosting (also known as Keyterm Prompting) allows you to improve Keyword Recall Rate (KRR) for important keyterms or phrases by up to 90%. This feature helps ensure accurate transcription of industry-specific terminology, product names, company names, and specialized jargon.
+
+## Learn How to Enable Word Boosting
+
+Add `keyterm` parameter in the query string to specify important terms along with a probability value (0 to 1) that indicates the importance or boost level for that term.
+
+The format is: `keyterm=TERM:PROBABILITY`
+
+Where:
+- `TERM` is the keyterm you want to boost
+- `PROBABILITY` is a value between 0 and 1 indicating the boost level (higher values = higher priority)
+
+### Pre-Recorded API
+
+```bash
+curl --request POST \
+  --url "https://waves-api.smallest.ai/api/v1/lightning/get_text?model=lightning&language=en&keyterm=nacho:0.5&keyterm=bacon%20cheeseburger:0.4" \
+  --header "Authorization: Bearer $SMALLEST_API_KEY" \
+  --header "Content-Type: audio/wav" \
+  --data-binary "@/path/to/audio.wav"
+```
+
+### Real-Time WebSocket API
+
+```javascript
+const url = new URL("wss://waves-api.smallest.ai/api/v1/lightning/get_text");
+url.searchParams.append("language", "en");
+url.searchParams.append("encoding", "linear16");
+url.searchParams.append("sample_rate", "16000");
+url.searchParams.append("keyterm", "nacho:0.5");
+url.searchParams.append("keyterm", "bacon cheeseburger:0.4");
+
+const ws = new WebSocket(url.toString(), {
+  headers: {
+    Authorization: `Bearer ${API_KEY}`,
+  },
+});
+```
+
+## Case Sensitivity and Formatting
+
+Keyterms preserve formatting (including case and punctuation) which helps control how proper nouns, product names, or company names are transcribed.
+
+Best practices for keyterm formatting:
+
+- For proper nouns (names, brands, titles): Use appropriate capitalization (`Waves`, `iPhone`, `Dr. Smith`)
+- For non-proper nouns: Use lowercase (`tretinoin`, `algorithm`, `protocol`)
+
+When smart formatting is applied to the transcript, words that start sentences may be automatically capitalized regardless of keyterm formatting.
+
+## Using Multiple Keyterms
+
+You can pass in multiple keyterms in your query string by repeating the `keyterm` parameter for each keyterm with its probability value:
+
+```bash
+curl --request POST \
+  --url "https://waves-api.smallest.ai/api/v1/lightning/get_text?model=lightning&language=en&keyterm=nacho:0.5&keyterm=bacon%20cheeseburger:0.45&keyterm=crispy%20seasoned%20fries:0.4" \
+  --header "Authorization: Bearer $SMALLEST_API_KEY" \
+  --header "Content-Type: audio/wav" \
+  --data-binary "@/path/to/audio.wav"
+```
+
+For multi-word phrases, URL-encode spaces as `%20`.
+
+## Expected Improvements
+
+Word Boosting can significantly improve recognition accuracy and confidence scores for industry-specific terminology. Typical improvements include:
+
+| Source | Before Recognition | After Recognition |
+|--------|-------------------|-------------------|
+| nacho stack double crunch taco | "macho stack" | "nacho stack double crunch taco" |
+| bacon cheeseburger | "bake in cheeseburger" | "bacon cheeseburger" |
+| account number | "a count number" | "account number" |
+| billing department | "building department" | "billing department" |
+| technical support | "tech nil call support" | "technical support" |
+
+## Best Practices for Keyterm Selection
+
+When choosing keyterms, consider the following guidelines to maximize accuracy:
+
+**Good Keyterm Examples:**
+
+- **Industry-specific terminology**: Medical terms (`tretinoin:0.5`, `diagnosis:0.4`), technical jargon (`escalation:0.45`, `API:0.35`)
+- **Product and company names**: Brand names (`Waves:0.5`, `iPhone:0.5`), service names, competitor names
+- **Multi-word phrases**: Common phrases in your domain (`account number:0.4`, `customer service:0.35`)
+- **Proper nouns**: Names, brands, titles with appropriate capitalization (`Dr. Smith:0.5`)
+- **Common non-proper nouns**: Use lowercase (`algorithm:0.3`, `protocol:0.3`, `refill:0.4`)
+
+**What to Avoid:**
+
+- **Generic common words**: Very common words that are rarely misrecognized (`the`, `and`, `is`) - don't boost these
+- **Overly broad terms**: Words that appear in many contexts without specific meaning
+- **Excessive keyterms**: Focus on the most important 20-50 terms with appropriate probability values
+- **Inconsistent formatting**: Ensure capitalization matches your desired output
+- **Extreme values**: Avoid using only 1.0 or only 0.0 - use a range to differentiate importance levels

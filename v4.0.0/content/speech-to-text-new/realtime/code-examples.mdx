@@ -42,7 +42,7 @@ async def stream_audio():
     }
 
     async with websockets.connect(WS_URL, additional_headers=headers) as ws:
-        print("Connected to ASR WebSocket")
+        print("Connected to STT WebSocket")
 
         audio_bytes = pathlib.Path(AUDIO_FILE).read_bytes()
         chunk_size = 4096
@@ -118,7 +118,7 @@ const ws = new WebSocket(url.toString(), {
 });
 
 ws.on("open", () => {
-  console.log("Connected to ASR WebSocket");
+  console.log("Connected to STT WebSocket");
 
   const audioBuffer = fs.readFileSync(AUDIO_FILE);
   const chunkSize = 4096;
@@ -193,7 +193,7 @@ async function transcribeAudio(audioFile) {
   const ws = new WebSocket(url.toString());
 
   ws.onopen = async () => {
-    console.log("Connected to ASR WebSocket");
+    console.log("Connected to STT WebSocket");
 
     const arrayBuffer = await audioFile.arrayBuffer();
     const chunkSize = 4096;

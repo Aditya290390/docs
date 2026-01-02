@@ -1,0 +1,542 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Waves",
+  "colors": {
+    "primary": "#217D80",
+    "light": "#008080",
+    "dark": "#004D4D"
+  },
+  "favicon": "/logo/favi.svg",
+  "navigation": {
+    "versions": [
+      {
+        "version": "v4.0.0",
+        "default": true,
+        "tabs": [
+          {
+            "tab": "Overview",
+            "icon": "book",
+            "groups": [
+              {
+                "group": "Introduction",
+                "pages": [
+                  "v4.0.0/content/introduction/introduction"
+                ]
+              },
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "v4.0.0/content/getting-started/quickstart",
+                  "v4.0.0/content/getting-started/models",
+                  "v4.0.0/content/getting-started/authentication",
+                  "v4.0.0/content/getting-started/http-stream"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Speech to Text",
+            "icon": "microphone",
+            "groups": [
+              {
+                "group": "Overview",
+                "icon": "microphone",
+                "pages": [
+                  "v4.0.0/content/speech-to-text-new/overview"
+                ]
+              },
+              {
+                "group": "Pre-Recorded (Lightning STT)",
+                "icon": "play",
+                "pages": [
+                  "v4.0.0/content/speech-to-text-new/pre-recorded/quickstart",
+                  "v4.0.0/content/speech-to-text-new/pre-recorded/audio-formats",
+                  "v4.0.0/content/speech-to-text-new/pre-recorded/webhooks",
+                  "v4.0.0/content/speech-to-text-new/pre-recorded/features",
+                  "v4.0.0/content/speech-to-text-new/pre-recorded/troubleshooting",
+                  "v4.0.0/content/speech-to-text-new/pre-recorded/best-practices",
+                  "v4.0.0/content/speech-to-text-new/pre-recorded/code-examples"
+                ]
+              },
+              {
+                "group": "Realtime (Lightning STT WebSocket)",
+                "icon": "radio",
+                "pages": [
+                  "v4.0.0/content/speech-to-text-new/realtime/quickstart",
+                  "v4.0.0/content/speech-to-text-new/realtime/response-format",
+                  "v4.0.0/content/speech-to-text-new/realtime/audio-formats",
+                  "v4.0.0/content/speech-to-text-new/realtime/features",
+                  "v4.0.0/content/speech-to-text-new/realtime/troubleshooting",
+                  "v4.0.0/content/speech-to-text-new/realtime/best-practices",
+                  "v4.0.0/content/speech-to-text-new/realtime/code-examples"
+                ]
+              },
+              {
+                "group": "Features",
+                "icon": "layer-group",
+                "pages": [
+                  "v4.0.0/content/speech-to-text-new/features/word-timestamps",
+                  "v4.0.0/content/speech-to-text-new/features/language-detection",
+                  "v4.0.0/content/speech-to-text-new/features/utterances",
+                  "v4.0.0/content/speech-to-text-new/features/diarization",
+                  "v4.0.0/content/speech-to-text-new/features/age-and-gender-detection",
+                  "v4.0.0/content/speech-to-text-new/features/emotion-detection",
+                  "v4.0.0/content/speech-to-text-new/features/word-boosting",
+                  "v4.0.0/content/speech-to-text-new/features/numeric-formatting",
+                  "v4.0.0/content/speech-to-text-new/features/redaction"
+                ]
+              },
+              {
+                "group": "Benchmarks",
+                "icon": "chart-line",
+                "pages": [
+                  "v4.0.0/content/speech-to-text-new/benchmarks/performance",
+                  "v4.0.0/content/speech-to-text-new/benchmarks/metrics-overview",
+                  "v4.0.0/content/speech-to-text-new/benchmarks/evaluation-walkthrough"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Text to Speech",
+            "icon": "volume-up",
+            "groups": [
+              {
+                "group": "Text to Speech",
+                "pages": [
+                  "v4.0.0/content/text-to-speech/how-to-tts",
+                  "v4.0.0/content/text-to-speech/stream-tts",
+                  "v4.0.0/content/text-to-speech/pronunciation-dictionaries",
+                  "v4.0.0/content/text-to-speech/get-voice-models-langs"
+                ]
+              },
+              {
+                "group": "Voice Cloning",
+                "pages": [
+                  "v4.0.0/content/voice-cloning/types-of-clone",
+                  "v4.0.0/content/voice-cloning/how-to-vc-ui",
+                  "v4.0.0/content/voice-cloning/how-to-vc",
+                  "v4.0.0/content/voice-cloning/how-to-delete-vc",
+                  "v4.0.0/content/voice-cloning/how-to-pvc"
+                ]
+              },
+              {
+                "group": "Integrations",
+                "pages": [
+                  "v4.0.0/content/integrations/livekit",
+                  "v4.0.0/content/integrations/plivo",
+                  "v4.0.0/content/integrations/vonage"
+                ]
+              },
+              {
+                "group": "Product",
+                "pages": [
+                  "v4.0.0/content/product/projects"
+                ]
+              },
+              {
+                "group": "Best Practices",
+                "pages": [
+                  "v4.0.0/content/best-practices/vc-best-practices",
+                  "v4.0.0/content/best-practices/pvc-best-practices",
+                  "v4.0.0/content/best-practices/tts-best-practices"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "API Reference",
+            "icon": "code",
+            "groups": [
+              {
+                "group": "API References",
+                "pages": [
+                  "v4.0.0/content/api-references/authentication",
+                  "v4.0.0/content/api-references/concurrency-and-limits",
+                  "v4.0.0/content/api-references/websocket"
+                ]
+              },
+              {
+                "group": "Text to Speech",
+                "pages": [
+                  "v4.0.0/content/api-references/lightning-v2",
+                  "v4.0.0/content/api-references/lightning-v2-stream",
+                  "v4.0.0/content/api-references/lightning-v2-ws"
+                ]
+              },
+              {
+                "group": "Speech to Text",
+                "pages": [
+                  "v4.0.0/content/api-references/lightning-asr",
+                  "v4.0.0/content/api-references/lightning-asr-ws"
+                ]
+              },
+              {
+                "group": "Voices",
+                "pages": [
+                  "v4.0.0/content/api-references/get-voices-api"
+                ]
+              },
+              {
+                "group": "Voice Cloning",
+                "pages": [
+                  "v4.0.0/content/api-references/add-voice-api",
+                  "v4.0.0/content/api-references/get-cloned-voices-api",
+                  "v4.0.0/content/api-references/delete-cloned-voice"
+                ]
+              },
+              {
+                "group": "Pronunciations dicts",
+                "pages": [
+                  "v4.0.0/content/api-references/pronunciations-dict/list",
+                  "v4.0.0/content/api-references/pronunciations-dict/create",
+                  "v4.0.0/content/api-references/pronunciations-dict/update",
+                  "v4.0.0/content/api-references/pronunciations-dict/delete"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Client Libraries",
+            "icon": "books",
+            "groups": [
+              {
+                "group": "Client Libraries",
+                "pages": [
+                  "v4.0.0/content/client-libraries/overview"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Changelog",
+            "icon": "clock",
+            "groups": [
+              {
+                "group": "Changelog",
+                "pages": [
+                  "v4.0.0/content/changelog/announcements"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "version": "v3.0.1",
+        "tabs": [
+          {
+            "tab": "Documentation",
+            "groups": [
+              {
+                "group": "Introduction",
+                "pages": [
+                  "v3.0.1/content/introduction/introduction"
+                ]
+              },
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "v3.0.1/content/getting-started/quickstart",
+                  "v3.0.1/content/getting-started/models",
+                  "v3.0.1/content/getting-started/authentication",
+                  "v3.0.1/content/getting-started/http-stream"
+                ]
+              },
+              {
+                "group": "Text to Speech",
+                "pages": [
+                  "v3.0.1/content/text-to-speech/how-to-tts",
+                  "v3.0.1/content/text-to-speech/llm-to-tts",
+                  "v3.0.1/content/text-to-speech/get-voice-models-langs"
+                ]
+              },
+              {
+                "group": "Voice Cloning",
+                "pages": [
+                  "v3.0.1/content/voice-cloning/types-of-clone",
+                  "v3.0.1/content/voice-cloning/how-to-vc-ui",
+                  "v3.0.1/content/voice-cloning/how-to-vc",
+                  "v3.0.1/content/voice-cloning/how-to-delete-vc",
+                  "v3.0.1/content/voice-cloning/how-to-pvc"
+                ]
+              },
+              {
+                "group": "Integrations",
+                "pages": [
+                  "v3.0.1/content/integrations/livekit",
+                  "v3.0.1/content/integrations/plivo",
+                  "v3.0.1/content/integrations/vonage"
+                ]
+              },
+              {
+                "group": "Product",
+                "pages": [
+                  "v3.0.1/content/product/projects"
+                ]
+              },
+              {
+                "group": "Best Practices",
+                "pages": [
+                  "v3.0.1/content/best-practices/vc-best-practices",
+                  "v3.0.1/content/best-practices/pvc-best-practices",
+                  "v3.0.1/content/best-practices/tts-best-practices"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "API References",
+                "pages": [
+                  "v3.0.1/content/api-references/authentication",
+                  "v3.0.1/content/api-references/websocket"
+                ]
+              },
+              {
+                "group": "Lightning v2",
+                "pages": [
+                  "v3.0.1/content/api-references/lightning-v2",
+                  "v3.0.1/content/api-references/lightning-v2-stream",
+                  "v3.0.1/content/api-references/lightning-v2-ws"
+                ]
+              },
+              {
+                "group": "Lightning Large",
+                "pages": [
+                  "v3.0.1/content/api-references/lightning-large",
+                  "v3.0.1/content/api-references/lightning-large-stream"
+                ]
+              },
+              {
+                "group": "Lightning",
+                "pages": [
+                  "v3.0.1/content/api-references/lightning"
+                ]
+              },
+              {
+                "group": "Voices",
+                "pages": [
+                  "v3.0.1/content/api-references/get-voices-api"
+                ]
+              },
+              {
+                "group": "Voice Cloning",
+                "pages": [
+                  "v3.0.1/content/api-references/add-voice-api",
+                  "v3.0.1/content/api-references/get-cloned-voices-api",
+                  "v3.0.1/content/api-references/delete-cloned-voice"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Client Libraries",
+            "groups": [
+              {
+                "group": "Client Libraries",
+                "pages": [
+                  "v3.0.1/content/client-libraries/overview"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Changelog",
+            "groups": [
+              {
+                "group": "Changelog",
+                "pages": [
+                  "v3.0.1/content/changelog/announcements"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "version": "v2.2.0",
+        "tabs": [
+          {
+            "tab": "Documentation",
+            "groups": [
+              {
+                "group": "Introduction",
+                "pages": [
+                  "v2.2.0/content/introduction/introduction"
+                ]
+              },
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "v2.2.0/content/getting-started/quickstart",
+                  "v2.2.0/content/getting-started/models",
+                  "v2.2.0/content/getting-started/authentication",
+                  "v2.2.0/content/getting-started/http-stream"
+                ]
+              },
+              {
+                "group": "Text to Speech",
+                "pages": [
+                  "v2.2.0/content/text-to-speech/how-to-tts",
+                  "v2.2.0/content/text-to-speech/llm-to-tts",
+                  "v2.2.0/content/text-to-speech/get-voice-models-langs"
+                ]
+              },
+              {
+                "group": "Voice Cloning",
+                "pages": [
+                  "v2.2.0/content/voice-cloning/types-of-clone",
+                  "v2.2.0/content/voice-cloning/how-to-vc-ui",
+                  "v2.2.0/content/voice-cloning/how-to-vc",
+                  "v2.2.0/content/voice-cloning/how-to-delete-vc",
+                  "v2.2.0/content/voice-cloning/how-to-pvc"
+                ]
+              },
+              {
+                "group": "Integrations",
+                "pages": [
+                  "v2.2.0/content/integrations/livekit",
+                  "v2.2.0/content/integrations/plivo",
+                  "v2.2.0/content/integrations/vonage"
+                ]
+              },
+              {
+                "group": "Product",
+                "pages": [
+                  "v2.2.0/content/product/projects"
+                ]
+              },
+              {
+                "group": "Best Practices",
+                "pages": [
+                  "v2.2.0/content/best-practices/vc-best-practices",
+                  "v2.2.0/content/best-practices/pvc-best-practices",
+                  "v2.2.0/content/best-practices/tts-best-practices"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "API References",
+                "pages": [
+                  "v2.2.0/content/api-references/authentication",
+                  "v2.2.0/content/api-references/websocket"
+                ]
+              },
+              {
+                "group": "Lightning v2",
+                "pages": [
+                  "v2.2.0/content/api-references/lightning-v2",
+                  "v2.2.0/content/api-references/lightning-v2-stream",
+                  "v2.2.0/content/api-references/lightning-v2-ws"
+                ]
+              },
+              {
+                "group": "Lightning Large",
+                "pages": [
+                  "v2.2.0/content/api-references/lightning-large",
+                  "v2.2.0/content/api-references/lightning-large-stream"
+                ]
+              },
+              {
+                "group": "Lightning",
+                "pages": [
+                  "v2.2.0/content/api-references/lightning"
+                ]
+              },
+              {
+                "group": "Voices",
+                "pages": [
+                  "v2.2.0/content/api-references/get-voices-api"
+                ]
+              },
+              {
+                "group": "Voice Cloning",
+                "pages": [
+                  "v2.2.0/content/api-references/add-voice-api",
+                  "v2.2.0/content/api-references/get-cloned-voices-api",
+                  "v2.2.0/content/api-references/delete-cloned-voice"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Client Libraries",
+            "groups": [
+              {
+                "group": "Client Libraries",
+                "pages": [
+                  "v2.2.0/content/client-libraries/overview"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Changelog",
+            "groups": [
+              {
+                "group": "Changelog",
+                "pages": [
+                  "v2.2.0/content/changelog/announcements"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/logo_dark.png",
+    "dark": "/logo/logo_light.png"
+  },
+  "api": {
+    "openapi": [
+      "openapi-spec/waves-api.yaml",
+      "openapi-spec/get-voices-openapi.yaml",
+      "openapi-spec/get-cloned-voices-openapi.yaml",
+      "openapi-spec/add-voice-openapi.yaml",
+      "openapi-spec/delete-cloned-voice-openapi.yaml",
+      "openapi-spec/asr-openapi.yaml"
+    ]
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:support@smallest.ai"
+      },
+      {
+        "label": "Community",
+        "href": "https://discord.gg/5evETqguJs"
+      },
+      {
+        "label": "Blog",
+        "href": "https://smallest.ai/blog"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Home",
+      "href": "https://smallest.ai"
+    }
+  },
+  "footer": {
+    "socials": {
+      "twitter": "https://twitter.com/smallest_AI",
+      "linkedin": "https://www.linkedin.com/company/smallest"
+    }
+  },
+  "integrations": {
+    "gtm": {
+      "tagId": "GTM-T9S9PBGF"
+    }
+  }
+}

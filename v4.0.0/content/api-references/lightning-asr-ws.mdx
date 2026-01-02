@@ -1,6 +1,6 @@
 ---
 title: "Lightning (Realtime)"
-description: The Lightning ASR WebSocket API provides real-time speech-to-text transcription capabilities with streaming audio input. This API uses WebSocket to deliver transcription results as audio is processed, enabling low-latency transcription without waiting for the entire audio file to upload. Perfect for live transcription, voice assistants, and real-time communication systems that require immediate speech recognition. Supports multiple languages, speaker diarization, emotion detection, and more advanced features.
+description: The Lightning STT WebSocket API provides real-time speech-to-text transcription capabilities with streaming audio input. This API uses WebSocket to deliver transcription results as audio is processed, enabling low-latency transcription without waiting for the entire audio file to upload. Perfect for live transcription, voice assistants, and real-time communication systems that require immediate speech recognition. Supports multiple languages, word-level timestamps, sentence-level timestamps (utterances), PII and PCI redaction, cumulative transcripts, and more advanced features.
 asyncapi: "/asyncapi-spec/lightning-asr-ws.json /api/v1/lightning/get_text"
 ---
 
@@ -23,9 +23,13 @@ The WebSocket connection accepts the following query parameters:
 
 ### Feature Flags
 
-| Parameter           | Type   | Default | Description                                                              |
-| ------------------- | ------ | ------- | ------------------------------------------------------------------------ |
-| `word_timestamps`   | string | `false` | Include word-level timestamps in transcription. Options: `true`, `false` |
+| Parameter             | Type   | Default | Description                                                              |
+| --------------------- | ------ | ------- | ------------------------------------------------------------------------ |
+| `word_timestamps`     | string | `false` | Include word-level timestamps in transcription. Options: `true`, `false` |
+| `full_transcript`     | string | `false` | Include cumulative transcript received till now in responses where `is_final` is `true`. Options: `true`, `false` |
+| `sentence_timestamps` | string | `false` | Include sentence-level timestamps (utterances) in transcription. Options: `true`, `false` |
+| `redact_pii`          | string | `false` | Redact personally identifiable information (name, surname, address). Options: `true`, `false` |
+| `redact_pci`          | string | `false` | Redact payment card information (credit card, CVV, zip, account number). Options: `true`, `false` |
 
 ### Webhook Configuration
 
@@ -39,6 +43,10 @@ url.searchParams.append("language", "en");
 url.searchParams.append("encoding", "linear16");
 url.searchParams.append("sample_rate", "16000");
 url.searchParams.append("word_timestamps", "true");
+url.searchParams.append("full_transcript", "true");
+url.searchParams.append("sentence_timestamps", "true");
+url.searchParams.append("redact_pii", "true");
+url.searchParams.append("redact_pci", "true");
 
 const ws = new WebSocket(url.toString(), {
   headers: {
@@ -76,7 +84,6 @@ The server responds with JSON messages containing transcription results:
 {
   "session_id": "sess_12345abcde",
   "transcript": "Hello, how are you?",
-  "full_transcript": "Hello, how are you?",
   "is_final": true,
   "is_last": false,
   "language": "en"
@@ -89,44 +96,80 @@ The server responds with JSON messages containing transcription results:
 | ----------------- | ------- | -------------------------------------------------------------------- |
 | `session_id`      | string  | Unique identifier for the transcription session                      |
 | `transcript`      | string  | Partial or complete transcription text for the current segment       |
-| `full_transcript` | string  | Complete transcription text accumulated so far                       |
 | `is_final`        | boolean | Indicates if this is the final transcription for the current segment |
 | `is_last`         | boolean | Indicates if this is the last transcription in the session           |
-| `language`        | string  | Detected language code, returns only when `is_final=True`                                               |
+| `language`        | string  | Detected primary language code, returns only when `is_final=True` |
+| `languages`       | array   | List of languages detected in the audio included in Responses where `is_final` is `true` |
 
 ### Optional Response Fields (Based on Query Parameters)
 
 | Field             | Type   | When Included            | Description                                                            |
 | ----------------- | ------ | ------------------------ | ---------------------------------------------------------------------- |
-| `word_timestamps` | array  | `word_timestamps=true`   | Word-level timestamps with `word`, `start`, and `end` fields           |
+| `full_transcript` | string | `full_transcript=true` AND `is_final=true` | Complete transcription text accumulated till now. Only present in responses when `full_transcript=true` query parameter is set AND `is_final=true` |
+| `words`            | array  | `word_timestamps=true`   | Word-level timestamps with `word`, `start`, `end`, and optional `speaker` (if diarization enabled) fields |
+| `utterances`       | array  | `sentence_timestamps=true` | Sentence-level timestamps with `text`, `start`, and `end` fields |
+| `redacted_entities`| array  | `redact_pii=true` or `redact_pci=true` | List of redacted entity placeholders (e.g., `[FIRSTNAME_1]`, `[CREDITCARDCVV_1]`) |
 
 ### Example Response with All Features
 
 ```json
 {
   "session_id": "sess_12345abcde",
-  "transcript": "I'm doing great, thank you!",
-  "full_transcript": "Hello, how are you? I'm doing great, thank you!",
+  "transcript": "[CREDITCARDCVV_1] and expiry [TIME_2] slash 34.",
   "is_final": true,
   "is_last": true,
+  "full_transcript": "Hi, my name is [FIRSTNAME_1] [FIRSTNAME_2] You can reach me at [PHONENUMBER_1] and I paid using my Visa card [ZIPCODE_1] [ACCOUNTNUMBER_1] with [CREDITCARDCVV_1] and expiry [TIME_1].",
   "language": "en",
-  "word_timestamps": [
+  "languages": ["en"],
+  "words": [
     {
-      "word": "I'm",
-      "start": 1.2,
-      "end": 1.4
+      "word": "[creditcardcvv_1]",
+      "start": 15.44,
+      "end": 17.36
     },
     {
-      "word": "doing",
-      "start": 1.4,
-      "end": 1.7
+      "word": "and",
+      "start": 18.0,
+      "end": 18.32
     },
     {
-      "word": "great",
-      "start": 1.7,
-      "end": 2.0
+      "word": "expiry",
+      "start": 18.32,
+      "end": 19.2
+    },
+    {
+      "word": "[time_2]",
+      "start": 19.2,
+      "end": 19.92
+    },
+    {
+      "word": "slash",
+      "start": 19.92,
+      "end": 20.4
+    },
+    {
+      "word": "34.",
+      "start": 20.4,
+      "end": 21.04
     }
   ],
+  "utterances": [
+    {
+      "text": "Hi, my name is Hans Miller.",
+      "start": 0.0,
+      "end": 2.64
+    },
+    {
+      "text": "You can reach me at [PHONENUMBER_1], and I paid using my Visa card 4242 42424242 with CVV123 and expiry [TIME_1].",
+      "start": 2.64,
+      "end": 21.04
+    }
+  ],
+  "redacted_entities": [
+    "[CREDITCARDCVV_1]",
+    "[TIME_2]"
+  ]
+}
 ```
 
 ## Code Examples
@@ -143,8 +186,17 @@ from urllib.parse import urlencode
 
 BASE_WS_URL = "wss://waves-api.smallest.ai/api/v1/lightning/get_text"
 
-async def stream_audio(audio_file, api_key, language="en", encoding="linear16", sample_rate=16000, word_timestamps="true"):
-    params = {"language": language, "encoding": encoding, "sample_rate": sample_rate, "word_timestamps": word_timestamps}
+async def stream_audio(audio_file, api_key, language="en", encoding="linear16", sample_rate=16000, word_timestamps="true", full_transcript="false", sentence_timestamps="false", redact_pii="false", redact_pci="false"):
+    params = {
+        "language": language,
+        "encoding": encoding,
+        "sample_rate": sample_rate,
+        "word_timestamps": word_timestamps,
+        "full_transcript": full_transcript,
+        "sentence_timestamps": sentence_timestamps,
+        "redact_pii": redact_pii,
+        "redact_pci": redact_pci
+    }
     ws_url = f"{BASE_WS_URL}?{urlencode(params)}"
     
     async with websockets.connect(ws_url, additional_headers={"Authorization": f"Bearer {api_key}"}) as ws:
@@ -165,7 +217,7 @@ async def stream_audio(audio_file, api_key, language="en", encoding="linear16", 
         
         async for message in ws:
             data = json.loads(message)
-            print("Received:", {k: v for k, v in data.items() if k != 'full_transcript'})
+            print("Received:", json.dumps(data, indent=2))
             if data.get("is_last"):
                 break
         
@@ -179,9 +231,24 @@ if __name__ == "__main__":
     parser.add_argument("--encoding", "-e", default="linear16")
     parser.add_argument("--sample-rate", "-sr", type=int, default=16000)
     parser.add_argument("--word-timestamps", "-wt", default="true")
+    parser.add_argument("--full-transcript", "-ft", default="false")
+    parser.add_argument("--sentence-timestamps", "-st", default="false")
+    parser.add_argument("--redact-pii", default="false")
+    parser.add_argument("--redact-pci", default="false")
     
     args = parser.parse_args()
-    asyncio.run(stream_audio(args.audio_file, args.api_key, args.language, args.encoding, args.sample_rate, args.word_timestamps))
+    asyncio.run(stream_audio(
+        args.audio_file,
+        args.api_key,
+        args.language,
+        args.encoding,
+        args.sample_rate,
+        args.word_timestamps,
+        args.full_transcript,
+        args.sentence_timestamps,
+        args.redact_pii,
+        args.redact_pci
+    ))
 ```
 </CodeGroup>
 

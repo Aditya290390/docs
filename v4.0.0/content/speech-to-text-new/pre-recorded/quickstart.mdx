@@ -9,7 +9,7 @@ This guide will show you how to convert an audio file into text with the Smalles
 
 > Transcribe pre-recorded audio files using synchronous HTTPS POST requests. Perfect for batch processing, archived media, and offline transcription workflows.
 
-The Pre-Recorded API allows you to upload audio files and receive complete transcripts in a single request. It can process and audio file uploaded as raw bytes or take a URL to retrieve one from a remote server.
+The Pre-Recorded API allows you to upload audio files and receive complete transcripts in a single request. It can process an audio file uploaded as raw bytes or take a URL to retrieve one from a remote server.
 
 ## When to Use Pre-Recorded Transcription
 
@@ -177,22 +177,26 @@ A successful request returns a JSON object with the transcription and metadata:
 
 ```json
 {
+  "status": "success",
   "transcription": "Hello, this is a test transcription.",
-  "word_timestamps": [
-    {"word": "Hello", "start": 0.0, "end": 0.5},
-    {"word": "this", "start": 0.6, "end": 0.8}
+  "words": [
+    {"start": 0.48, "end": 1.12, "word": "Hello,"},
+    {"start": 1.12, "end": 1.28, "word": "this"},
+    {"start": 1.28, "end": 1.44, "word": "is"},
+    {"start": 1.44, "end": 2.16, "word": "a"},
+    {"start": 2.16, "end": 2.96, "word": "test"},
+    {"start": 2.96, "end": 3.76, "word": "transcription."}
   ],
-  "metadata": {
-    "duration": 3.5,
-    "file_size": 123456
-  }
+  "utterances": [
+    {"start": 0.48, "end": 3.76, "text": "Hello, this is a test transcription."}
+  ]
 }
 ```
 
 ## Next Steps
 
 - Learn about [supported audio formats](/v4.0.0/content/speech-to-text-new/pre-recorded/audio-formats).
-- Decide which enrichment options to enable in the [features guide](/v4.0.0/content/speech-to-text-new/pre-recorded/features/language-detection).
+- Decide which enrichment options to enable in the [features guide](/v4.0.0/content/speech-to-text-new/pre-recorded/features).
 - Configure asynchronous callbacks with [webhooks](/v4.0.0/content/speech-to-text-new/pre-recorded/webhooks).
 - Review a full [code example](/v4.0.0/content/speech-to-text-new/pre-recorded/code-examples) here.
 

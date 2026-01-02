@@ -1,0 +1,114 @@
+---
+title: 'Word timestamps'
+description: 'Return word-level timing metadata from Lightning STT'
+---
+
+Word timestamps provide precise timing information for each word in the transcription, enabling you to generate captions, subtitles, and align transcripts with audio playback.
+
+## Enabling Word Timestamps
+
+### Pre-Recorded API
+
+Add `word_timestamps=true` to your Lightning STT query parameters. This works for both raw-byte uploads (`Content-Type: audio/wav`) and JSON requests with hosted audio URLs.
+
+## Sample request
+
+```bash
+curl --request POST \
+  --url "https://waves-api.smallest.ai/api/v1/lightning/get_text?model=lightning&language=en&word_timestamps=true" \
+  --header "Authorization: Bearer $SMALLEST_API_KEY" \
+  --header "Content-Type: audio/wav" \
+  --data-binary "@/path/to/audio.wav"
+```
+
+### Real-Time WebSocket API
+
+Add `word_timestamps=true` to your WebSocket connection query parameters when connecting to the Lightning STT WebSocket API.
+
+```javascript
+const url = new URL("wss://waves-api.smallest.ai/api/v1/lightning/get_text");
+url.searchParams.append("language", "en");
+url.searchParams.append("encoding", "linear16");
+url.searchParams.append("sample_rate", "16000");
+url.searchParams.append("word_timestamps", "true");
+
+const ws = new WebSocket(url.toString(), {
+  headers: {
+    Authorization: `Bearer ${API_KEY}`,
+  },
+});
+```
+
+## Output format & field of interest
+
+Responses include a `words` array with `word`, `start`, `end`, and optional `speaker` labels (when diarization is enabled). Use these offsets to generate captions, subtitle tracks, or to align transcripts with downstream analytics.
+
+### Pre-Recorded API Response
+
+```json
+{
+  "status": "success",
+  "transcription": "Hello world.",
+  "words": [
+    { "start": 0.0, "end": 0.5, "speaker": "speaker_0", "word": "Hello" },
+    { "start": 0.6, "end": 0.9, "speaker": "speaker_0", "word": "world." }
+  ],
+  "utterances": [
+    { "text": "Hello world.", "start": 0.0, "end": 0.9, "speaker": "speaker_0" }
+  ]
+}
+```
+
+The response of Pre-Recorded API includes the utterances field, which includes sentence level timestamps.
+
+### Real-Time WebSocket API Response
+
+```json
+{
+  "type": "transcription",
+  "status": "success",
+  "session_id": "00000000-0000-0000-0000-000000000001",
+  "transcript": "Hello, how are you?",
+  "is_final": true,
+  "is_last": false,
+  "language": "en",
+  "word_timestamps": [
+    {
+      "word": "Hello",
+      "start": 0.0,
+      "end": 0.5
+    },
+    {
+      "word": "how",
+      "start": 0.6,
+      "end": 0.8
+    },
+    {
+      "word": "are",
+      "start": 0.8,
+      "end": 1.0
+    },
+    {
+      "word": "you?",
+      "start": 1.0,
+      "end": 1.3
+    }
+  ]
+}
+```
+
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `word` | string | The transcribed word |
+| `start` | number | Start time in seconds |
+| `end` | number | End time in seconds |
+| `speaker` | string | Speaker label (pre-recorded API only, when diarization is enabled) |
+
+## Use Cases
+
+- **Caption generation**: Create synchronized captions for video or live streams
+- **Subtitle tracks**: Generate SRT or VTT subtitle files
+- **Analytics**: Align transcripts with audio playback for detailed analysis
+- **Search**: Enable time-based search within audio content

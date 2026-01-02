@@ -165,15 +165,12 @@ paths:
                     type: number
                     description: Duration of the audio file in seconds
                     example: 1.7
-                  word_timestamps:
+                  words:
                     type: array
                     description: Word-level timestamps in seconds.
                     items:
                       type: object
                       properties:
-                        word:
-                          type: string
-                          example: "Hello"
                         start:
                           type: number
                           example: 0.0
@@ -184,6 +181,9 @@ paths:
                           type: string
                           description: Speaker if diarization is enabled
                           example: "speaker_0"
+                        word:
+                          type: string
+                          example: "Hello"
                   utterances:
                     type: array
                     description: List of utterances with start and end times
@@ -256,15 +256,15 @@ paths:
               example:
                 status: "success"
                 transcription: "Hello world."
-                word_timestamps:
-                  - word: "Hello"
-                    start: 0.0
+                words:
+                  - start: 0.0
                     end: 0.5
                     speaker: "speaker_0"
-                  - word: "world."
-                    start: 0.6
+                    word: "Hello"
+                  - start: 0.6
                     end: 0.9
                     speaker: "speaker_0"
+                    word: "world."
                 utterances:
                   - text: "Hello world."
                     start: 0.0

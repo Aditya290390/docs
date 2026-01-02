@@ -77,8 +77,8 @@ def process_results(response):
             print(f"      Time: {start:.2f}s - {end:.2f}s")
             print(f"      Text: {text}")
     
-    if 'word_timestamps' in response:
-        print(f"\nWord-level timestamps: {len(response['word_timestamps'])} words")
+    if 'words' in response:
+        print(f"\nWord-level timestamps: {len(response['words'])} words")
     
     if 'metadata' in response:
         metadata = response['metadata']
@@ -116,7 +116,7 @@ if __name__ == "__main__":
 Install required dependencies:
 
 ```bash
-pip install smallest-ai pydub
+pip install smallestai pydub
 ```
 
 ## Key Features Demonstrated
