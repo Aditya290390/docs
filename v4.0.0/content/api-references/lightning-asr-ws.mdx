@@ -12,7 +12,7 @@ The WebSocket connection accepts the following query parameters:
 
 | Parameter     | Type   | Default    | Description                                                                           |
 | ------------- | ------ | ---------- | ------------------------------------------------------------------------------------- |
-| `encoding`    | string | `linear16` | Audio encoding format. Options: `linear16`, `linear32`, `alaw`, `mulaw`               |
+| `encoding`    | string | `linear16` | Audio encoding format. Options: `linear16`, `linear32`, `alaw`, `mulaw`, `opus`, `ogg_opus` |
 | `sample_rate` | string | `16000`    | Audio sample rate in Hz. Options: `8000`, `16000`, `22050`, `24000`, `44100`, `48000` |
 
 ### Language & Detection
@@ -25,11 +25,14 @@ The WebSocket connection accepts the following query parameters:
 
 | Parameter             | Type   | Default | Description                                                              |
 | --------------------- | ------ | ------- | ------------------------------------------------------------------------ |
-| `word_timestamps`     | string | `false` | Include word-level timestamps in transcription. Options: `true`, `false` |
+| `word_timestamps`     | string | `true`  | Include word-level timestamps in transcription. Options: `true`, `false` |
 | `full_transcript`     | string | `false` | Include cumulative transcript received till now in responses where `is_final` is `true`. Options: `true`, `false` |
 | `sentence_timestamps` | string | `false` | Include sentence-level timestamps (utterances) in transcription. Options: `true`, `false` |
 | `redact_pii`          | string | `false` | Redact personally identifiable information (name, surname, address). Options: `true`, `false` |
 | `redact_pci`          | string | `false` | Redact payment card information (credit card, CVV, zip, account number). Options: `true`, `false` |
+| `numerals`            | string | `auto`  | "Convert spoken numerals into digit form (e.g., 'twenty five' to '25') and `auto` enables automatic detection based on context. Options: `true`, `false`, `auto` |
+| `keywords`            | list   |  None   | List of keywords to boost during transcription. Each keyword is formatted as 'word:weight' where weight is a positive number indicating boost intensity (e.g., ['word:5.0', 'name:4.0']). Higher weights increase the likelihood of the keyword being recognized. Recommended weight range is 1 to 10; extremely high values may degrade transcription accuracy. |
+| `diarize`             | string | `false` | Enable speaker diarization to identify and label different speakers in the audio. When enabled, each word in the transcription includes `speaker` (integer ID) and `speaker_confidence` (float 0-1) fields. Options: `true`, `false` |
 
 ### Webhook Configuration
 
@@ -47,6 +50,9 @@ url.searchParams.append("full_transcript", "true");
 url.searchParams.append("sentence_timestamps", "true");
 url.searchParams.append("redact_pii", "true");
 url.searchParams.append("redact_pci", "true");
+url.searchParams.append("numerals", "true");
+url.searchParams.append("keywords", JSON.stringify(["product:5.0"]));
+url.searchParams.append("diarize", "true");
 
 const ws = new WebSocket(url.toString(), {
   headers: {
@@ -106,7 +112,7 @@ The server responds with JSON messages containing transcription results:
 | Field             | Type   | When Included            | Description                                                            |
 | ----------------- | ------ | ------------------------ | ---------------------------------------------------------------------- |
 | `full_transcript` | string | `full_transcript=true` AND `is_final=true` | Complete transcription text accumulated till now. Only present in responses when `full_transcript=true` query parameter is set AND `is_final=true` |
-| `words`            | array  | `word_timestamps=true`   | Word-level timestamps with `word`, `start`, `end`, and optional `speaker` (if diarization enabled) fields |
+| `words`            | array  | `word_timestamps=true`   | Word-level timestamps with `word`, `start`, `end`, and `confidence` fields. When `diarize=true`, also includes `speaker` and `speaker_confidence` fields |
 | `utterances`       | array  | `sentence_timestamps=true` | Sentence-level timestamps with `text`, `start`, and `end` fields |
 | `redacted_entities`| array  | `redact_pii=true` or `redact_pci=true` | List of redacted entity placeholders (e.g., `[FIRSTNAME_1]`, `[CREDITCARDCVV_1]`) |
 
@@ -115,7 +121,7 @@ The server responds with JSON messages containing transcription results:
 ```json
 {
   "session_id": "sess_12345abcde",
-  "transcript": "[CREDITCARDCVV_1] and expiry [TIME_2] slash 34.",
+  "transcript": "[CREDITCARDCVV_1] and expiry [TIME_2].",
   "is_final": true,
   "is_last": true,
   "full_transcript": "Hi, my name is [FIRSTNAME_1] [FIRSTNAME_2] You can reach me at [PHONENUMBER_1] and I paid using my Visa card [ZIPCODE_1] [ACCOUNTNUMBER_1] with [CREDITCARDCVV_1] and expiry [TIME_1].",
@@ -125,44 +131,48 @@ The server responds with JSON messages containing transcription results:
     {
       "word": "[creditcardcvv_1]",
       "start": 15.44,
-      "end": 17.36
+      "end": 17.36,
+      "confidence": 0.97,
+      "speaker": 0,
+      "speaker_confidence": 0.67
     },
     {
       "word": "and",
       "start": 18.0,
-      "end": 18.32
+      "end": 18.32,
+      "confidence": 0.94,
+      "speaker": 0,
+      "speaker_confidence": 0.76
     },
     {
       "word": "expiry",
       "start": 18.32,
-      "end": 19.2
+      "end": 19.2,
+      "confidence": 1.0,
+      "speaker": 0,
+      "speaker_confidence": 0.91
     },
     {
       "word": "[time_2]",
       "start": 19.2,
-      "end": 19.92
+      "end": 19.92,
+      "confidence": 0.91,
+      "speaker": 0,
+      "speaker_confidence": 0.82
     },
-    {
-      "word": "slash",
-      "start": 19.92,
-      "end": 20.4
-    },
-    {
-      "word": "34.",
-      "start": 20.4,
-      "end": 21.04
-    }
   ],
   "utterances": [
     {
       "text": "Hi, my name is Hans Miller.",
       "start": 0.0,
-      "end": 2.64
+      "end": 2.64,
+      "speaker": 0
     },
     {
       "text": "You can reach me at [PHONENUMBER_1], and I paid using my Visa card 4242 42424242 with CVV123 and expiry [TIME_1].",
       "start": 2.64,
-      "end": 21.04
+      "end": 21.04,
+      "speaker": 0
     }
   ],
   "redacted_entities": [
@@ -186,7 +196,7 @@ from urllib.parse import urlencode
 
 BASE_WS_URL = "wss://waves-api.smallest.ai/api/v1/lightning/get_text"
 
-async def stream_audio(audio_file, api_key, language="en", encoding="linear16", sample_rate=16000, word_timestamps="true", full_transcript="false", sentence_timestamps="false", redact_pii="false", redact_pci="false"):
+async def stream_audio(audio_file, api_key, language="en", encoding="linear16", sample_rate=16000, word_timestamps="true", full_transcript="false", sentence_timestamps="false", redact_pii="false", redact_pci="false", numerals="auto", keywords="auto", "diarize": "false"):
     params = {
         "language": language,
         "encoding": encoding,
@@ -195,7 +205,10 @@ async def stream_audio(audio_file, api_key, language="en", encoding="linear16", 
         "full_transcript": full_transcript,
         "sentence_timestamps": sentence_timestamps,
         "redact_pii": redact_pii,
-        "redact_pci": redact_pci
+        "redact_pci": redact_pci,
+        "numerals": numerals,
+        "keywords": keywords,
+        "diarize": diarize
     }
     ws_url = f"{BASE_WS_URL}?{urlencode(params)}"
     
@@ -235,6 +248,9 @@ if __name__ == "__main__":
     parser.add_argument("--sentence-timestamps", "-st", default="false")
     parser.add_argument("--redact-pii", default="false")
     parser.add_argument("--redact-pci", default="false")
+    parser.add_argument("--numerals", default="auto")
+    parser.add_argument("--keywords", default=None)
+    parser.add_argument("--diarize", default="false")
     
     args = parser.parse_args()
     asyncio.run(stream_audio(
@@ -247,7 +263,10 @@ if __name__ == "__main__":
         args.full_transcript,
         args.sentence_timestamps,
         args.redact_pii,
-        args.redact_pci
+        args.redact_pci,
+        args.numerals,
+        args.keywords,
+        args.diarize
     ))
 ```
 </CodeGroup>

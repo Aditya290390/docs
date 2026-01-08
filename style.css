@@ -1,0 +1,20 @@
+#banner {
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: center;
+  background-color: #217D80;
+}
+
+/* Increase navigation logo size */
+.nav-logo,
+.nav-logo img {
+  height: auto !important;
+  max-height: 40px !important;
+  width: auto !important;
+}
+
+/* Fully custom scrollbar for sidebar */
+#sidebar-content {
+  scrollbar-width: thin !important;
+  scrollbar-color: gray transparent !important;
+}

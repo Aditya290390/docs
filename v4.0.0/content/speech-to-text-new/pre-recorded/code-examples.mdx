@@ -47,7 +47,7 @@ def transcribe_with_features(audio_path):
 
 def process_results(response):
     """
-    Extract and display transcription results with all metadata.
+    Extract and display transcription results.
     """
     print("=" * 60)
     print("TRANSCRIPTION RESULTS")
@@ -79,12 +79,6 @@ def process_results(response):
     
     if 'words' in response:
         print(f"\nWord-level timestamps: {len(response['words'])} words")
-    
-    if 'metadata' in response:
-        metadata = response['metadata']
-        print(f"\nMetadata:")
-        print(f"  Duration: {metadata.get('duration', 'N/A')}s")
-        print(f"  Filename: {metadata.get('filename', 'N/A')}")
 
 if __name__ == "__main__":
     input_audio = "input_audio.mp3"
@@ -134,5 +128,4 @@ The script will output:
 - Age and gender predictions
 - Emotion scores (happiness, sadness, disgust, fear, anger)
 - Sentence-level utterances with timestamps and speaker IDs
-- Audio metadata (duration, filename)
 

@@ -67,7 +67,7 @@ if (message.is_final) {
 
 ### Before Streaming
 
-1. **Convert to correct format**: Ensure audio matches the `encoding` parameter (linear16, linear32, alaw, mulaw)
+1. **Convert to correct format**: Ensure audio matches the `encoding` parameter (linear16, linear32, alaw, mulaw, opus, ogg_opus)
 2. **Set sample rate**: Match the `sample_rate` parameter in your WebSocket URL
 3. **Mono channel**: Downmix stereo/multi-channel to mono
 4. **Normalize levels**: Prevent clipping and ensure consistent volume

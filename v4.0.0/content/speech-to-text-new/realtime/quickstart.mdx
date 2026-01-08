@@ -3,11 +3,11 @@ title: 'Quickstart'
 description: 'Get started with real-time transcription using the Waves STT WebSocket API'
 ---
 
-This guide will show you how to transcribe streaming audio using the Smallest AI's Lightning STT model using our WebSocket API. Our Lightning model provides state of the art low latencies (64ms) for TTFT (Time to First Transcript) making it ideal choice for speech to text conversion during live conversations. 
+This guide shows you how to transcribe streaming audio using Smallest AI's Lightning STT model via the WebSocket API. The Lightning model provides state-of-the-art low latencies (64ms) for TTFT (Time to First Transcript), making it an ideal choice for speech-to-text conversion during live conversations. 
 
 # Real-Time Audio Transcription
 
-The Real-Time API allows you to stream audio data and receive transcription results as the audio is processed. This is ideal for live conversations, voice assistants, and scenarios where you need immediate transcription feedback. In such scenarios, where minimizing latency is of utmost importance, audio is streamed in chunks of a few kilobytes on a live connection.
+The Real-Time API allows you to stream audio data and receive transcription results as the audio is processed. This is ideal for live conversations, voice assistants, and scenarios where you need immediate transcription feedback. For these scenarios, where minimizing latency is critical, stream audio in chunks of a few kilobytes over a live connection.
 
 ## When to Use Real-Time Transcription
 
@@ -110,7 +110,6 @@ The server responds with JSON messages containing transcription results:
 {
   "session_id": "sess_12345abcde",
   "transcript": "Hello, how are you?",
-  "full_transcript": "Hello, how are you?",
   "is_final": true,
   "is_last": false,
   "language": "en"

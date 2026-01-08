@@ -3,14 +3,15 @@ title: 'Language detection'
 description: 'Automatically detect and transcribe 30+ languages with Lightning STT'
 ---
 
-## Learn how to enable language detection
+## Enabling language detection
 
-Set the `language` query parameter to `multi` when calling `https://waves-api.smallest.ai/api/v1/lightning/get_text`. Lightning STT will auto-detect the spoken language across 30+ ISO 639-1 codes without changing your request body, whether you upload raw audio bytes or send a hosted URL.
-## Output format & field of interest
+Set the `language` query parameter to `multi` when calling the API. It will auto-detect the spoken language across 30+ ISO 639-1 language codes.
 
-When language detection is enabled, the `transcription`, `words`, and `utterances` arrays are emitted in the detected language. Persist the detected locale in your app by storing the `language` parameter you supplied (for auditing) and by inspecting downstream metadata such as subtitles or captions that inherit the localized transcript.
+<Note>
+View the full list of [supported languages](../overview#supported-languages).
+</Note>
 
-## Sample request
+### Pre-Recorded API
 
 ```bash
 curl --request POST \
@@ -20,7 +21,28 @@ curl --request POST \
   --data-binary "@/path/to/audio.wav"
 ```
 
+### Real-Time WebSocket API
+
+```javascript
+const url = new URL("wss://waves-api.smallest.ai/api/v1/lightning/get_text");
+url.searchParams.append("language", "multi");
+url.searchParams.append("encoding", "linear16");
+url.searchParams.append("sample_rate", "16000");
+
+const ws = new WebSocket(url.toString(), {
+  headers: {
+    Authorization: `Bearer ${API_KEY}`,
+  },
+});
+```
+
+## Output format & field of interest
+
+When language detection is enabled, the `transcription` (or `transcript` for realtime), `words`, and `utterances` arrays are emitted in the detected language. The response includes a `language` field with the detected primary language code, and a `languages` array (in realtime responses where `is_final=true`) listing all detected languages. Persist the detected locale in your app by storing the `language` parameter you supplied (for auditing) and by inspecting downstream metadata such as subtitles or captions that inherit the localized transcript.
+
 ## Sample response
+
+### Pre-Recorded API Response
 
 ```json
 {
@@ -32,11 +54,24 @@ curl --request POST \
   ],
   "utterances": [
     { "text": "Hola mundo.", "start": 0.0, "end": 0.9 }
-  ],
-  "metadata": {
-    "filename": "audio.wav",
-    "duration": 1.0
-  }
+  ]
 }
 ```
+
+### Real-Time WebSocket API Response
+
+```json
+{
+  "session_id": "sess_12345abcde",
+  "transcript": "Hola mundo.",
+  "is_final": true,
+  "is_last": false,
+  "language": "es",
+  "languages": ["es"]
+}
+```
+
+<Note>
+The `language` field is only returned when `is_final=true` in real-time API responses. The `languages` array lists all languages detected in the audio and is also only included when `is_final=true`.
+</Note>
 

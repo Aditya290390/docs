@@ -34,9 +34,19 @@ The Lightning STT WebSocket API supports the following audio encoding formats fo
       <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Telephony systems</td>
     </tr>
     <tr>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderBottomLeftRadius: '8px' }}><code>mulaw</code></td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}><code>mulaw</code></td>
       <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>μ-law encoding</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderBottomRightRadius: '8px' }}>Telephony systems (North America)</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Telephony systems (North America)</td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}><code>opus</code></td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Opus compressed audio</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Low bandwidth, high quality</td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderBottomLeftRadius: '8px' }}><code>ogg_opus</code></td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Ogg Opus container</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderBottomRightRadius: '8px' }}>Ogg container with Opus codec</td>
     </tr>
   </tbody>
 </table>
@@ -112,7 +122,7 @@ Chunk Size: 4096 bytes
 
 Before streaming audio to the WebSocket API, ensure your audio is:
 
-1. **Converted to the correct format**: Use the specified encoding (linear16, linear32, alaw, or mulaw)
+1. **Converted to the correct format**: Use the specified encoding (linear16, linear32, alaw, mulaw, opus, or ogg_opus)
 2. **Set to the correct sample rate**: Match the `sample_rate` parameter in your WebSocket URL
 3. **Mono channel**: Downmix stereo or multi-channel audio to mono
 4. **Properly chunked**: Split audio into 4096-byte chunks for streaming

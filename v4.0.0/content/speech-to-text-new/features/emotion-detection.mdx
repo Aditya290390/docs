@@ -3,15 +3,11 @@ title: 'Emotion detection'
 description: 'Capture per-emotion confidence scores from Lightning STT responses'
 ---
 
-## Learn how to enable emotion detection
+## Enabling emotion detection
 
-Include `emotion_detection=true` in your Lightning STT query parameters. The flag adds lightweight affect analysis without changing how you upload audio.
+Include `emotion_detection=true` in your Lightning STT query parameters.
 
-## Output format & field of interest
-
-The response adds an `emotions` object containing floating-point scores (0–1) for happiness, sadness, disgust, fear, and anger. Use these fields to monitor sentiment, trigger QA alerts, or enrich customer analytics.
-
-## Sample request
+### Sample request
 
 ```bash
 curl --request POST \
@@ -21,7 +17,15 @@ curl --request POST \
   --data-binary "@/path/to/audio.wav"
 ```
 
-## Sample response
+<Note>
+Emotion detection is currently supported only for Pre-Recorded API. Real-Time API support is coming soon.
+</Note>
+
+## Output format & field of interest
+
+The response adds an `emotions` object containing floating-point scores (0–1) for happiness, sadness, disgust, fear, and anger. Use these fields to monitor sentiment, trigger QA alerts, or enrich customer analytics.
+
+### Sample response
 
 ```json
 {

@@ -93,7 +93,7 @@ description: 'Common issues and solutions for real-time WebSocket transcription'
 1. **Verify Encoding Parameters**:
    ```javascript
    // Ensure encoding matches your audio format
-   url.searchParams.append("encoding", "linear16"); // or linear32, alaw, mulaw
+   url.searchParams.append("encoding", "linear16"); // or linear32, alaw, mulaw, opus, ogg_opus
    url.searchParams.append("sample_rate", "16000"); // Must match audio
    ```
 

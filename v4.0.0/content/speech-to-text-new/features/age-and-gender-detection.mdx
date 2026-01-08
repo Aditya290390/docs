@@ -3,15 +3,11 @@ title: 'Age & gender detection'
 description: 'Predict demographic attributes alongside every transcription'
 ---
 
-## Learn how to enable age & gender detection
+## Enabling age & gender detection
 
-Append `age_detection=true` and/or `gender_detection=true` to your Lightning STT query string. You can toggle them independently or pair them with diarization, timestamps, and emotion scores.
+Append `age_detection=true` and/or `gender_detection=true` to your Lightning STT query string. You can toggle them independently as well.
 
-## Output format & field of interest
-
-Responses include top-level `age` (`infant`, `teenager`, `adult`, `old`) and `gender` (`male`, `female`) fields that describe the dominant speaker in the processed segment. Store these fields next to each transcript to power demographic analytics or routing logic.
-
-## Sample request
+### Sample request
 
 ```bash
 curl --request POST \
@@ -21,18 +17,22 @@ curl --request POST \
   --data-binary "@/path/to/audio.wav"
 ```
 
-## Sample response
+<Note>
+Age and gender detection are currently supported only for Pre-Recorded API. Real-Time API support is coming soon.
+</Note>
+
+## Output format & field of interest
+
+Responses include top-level `age` (`infant`, `teenager`, `adult`, `old`) and `gender` (`male`, `female`) fields that describe the dominant speaker in the processed segment. Store these fields next to each transcript to power demographic analytics or routing logic.
+
+### Sample response
 
 ```json
 {
   "status": "success",
   "transcription": "Hello world.",
   "age": "adult",
-  "gender": "male",
-  "metadata": {
-    "filename": "audio.mp3",
-    "duration": 1.7
-  }
+  "gender": "male"
 }
 ```
 

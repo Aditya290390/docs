@@ -3,7 +3,7 @@ title: 'Response Format'
 description: 'Understanding the structure and fields of real-time transcription responses'
 ---
 
-For every chunk sent on the WebSocket, the server responds with a json message. It provides users control over response handling, which they can structure according to their needs. Users can choose to read quick responses with lower accuracy or wait until the server sends sizable responses which are highly accurate. 
+For every chunk sent on the WebSocket, the server responds with a JSON message. Users can structure response handling according to their needs. Users can choose to read quick responses with lower accuracy or wait until the server sends larger responses that are highly accurate. 
 
 ## Example Response
 
@@ -31,17 +31,20 @@ For every chunk sent on the WebSocket, the server responds with a json message. 
 
 The following fields may be included in responses under certain conditions:
 
-- **`full_transcript`**: Complete transcription text accumulated so far (will be included when `is_last=true`).
-- **`language`**: Detected language code (typically included when `is_final=true`).
-- **`word_timestamps`**: Array of word-level timing metadata (only included when `word_timestamps=true` in query parameters).
+- **`full_transcript`**: Complete transcription text accumulated so far. Only included when `full_transcript=true` query parameter is set AND `is_final=true`.
+- **`language`**: Detected primary language code. Only returned when `is_final=true`.
+- **`languages`**: Array of language codes detected in the audio. Only returned when `is_final=true`.
+- **`words`**: Array of word-level timestamps (only included when `word_timestamps=true` in query parameters). Each word object contains `word`, `start`, `end`, and `confidence` fields. When `diarize=true`, also includes `speaker` (integer ID) and `speaker_confidence` (0.0 to 1.0) fields.
+- **`utterances`**: Array of sentence-level timestamps (only included when `sentence_timestamps=true` in query parameters). Each utterance object contains `text`, `start`, and `end` fields. When `diarize=true`, also includes `speaker` (integer ID) field.
+- **`redacted_entities`**: Array of redacted entity placeholders (only included when `redact_pii=true` or `redact_pci=true`). Examples: `[FIRSTNAME_1]`, `[CREDITCARDCVV_1]`.
 
 ## Handling Responses
 
-We maintain an interval server side buffer, which collects user sent chunked audio. Once this buffer reaches a specific size, the server sends a special response with the `is_final` parameter set to `true` which contains transcription of user audio collected since the last such response.
+We maintain an internal server-side buffer that collects chunked audio sent by the user. Once this buffer reaches a specific size, the server sends a special response with the `is_final` parameter set to `true` that contains the transcription of user audio collected since the last such response.
 
 ### `is_final = true`
 
-We recommend processing responses of this kind for optimal transcription accuracy. The internal buffer size is caliberated in a way which optimizes response times and accuracy.
+We recommend processing responses of this kind for optimal transcription accuracy. The internal buffer size is calibrated to optimize response times and accuracy.
 
 ```json
 {
@@ -51,8 +54,9 @@ We recommend processing responses of this kind for optimal transcription accurac
   "transcript": "Should I do it? ",
   "is_final": true,
   "is_last": false,
-  "full_transcript": '',
-  "language": "en"
+  "full_transcript": "Hello. Should I do it?",
+  "language": "en",
+  "languages": ["en"]
 }
 ```
 
@@ -61,7 +65,7 @@ We recommend processing responses of this kind for optimal transcription accurac
 
 ### `is_final = false`
 
-These are interim transcript responses sent for each chunk. They provide quick feedback for low latency usecases.
+These are interim transcript responses sent for each chunk. They provide quick feedback for low latency use cases.
 
 ```json
 {
@@ -74,4 +78,8 @@ These are interim transcript responses sent for each chunk. They provide quick f
 }
 ```
 
--  These responses nat provide inaccurate results for the most recent words. It occurs when audio for these words are not fully sent to the server in the respective chunk.
+- These responses may provide inaccurate results for the most recent words. This occurs when the audio for these words is not fully sent to the server in the respective chunk.
+
+<Note>
+The `full_transcript` field is a feature that requires the `full_transcript` query parameter to be set to `true`. Learn more about the [Full Transcript feature](/v4.0.0/content/speech-to-text-new/features/full-transcript).
+</Note>
