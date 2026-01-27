@@ -541,12 +541,16 @@
       {
         "label": "Blog",
         "href": "https://smallest.ai/blog"
+      },
+      {
+        "label": "Home",
+        "href": "https://smallest.ai?utm_source=documentation&utm_medium=topButton"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Home",
-      "href": "https://smallest.ai"
+      "label": "Platform",
+      "href": "https://atoms.smallest.ai/dashboard?utm_source=documentation&utm_medium=topButton"
     }
   },
   "footer": {
