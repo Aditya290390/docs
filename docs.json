@@ -18,15 +18,9 @@
             "tab": "Documentation",
             "groups": [
               {
-                "group": "Introduction",
-                "pages": [
-                  "v4.0.0/content/introduction/introduction"
-                ]
-              },
-              {
                 "group": "Getting Started",
                 "pages": [
-                  "v4.0.0/content/getting-started/quickstart",
+                  "v4.0.0/content/getting-started/introduction",
                   "v4.0.0/content/getting-started/models",
                   "v4.0.0/content/getting-started/authentication",
                   "v4.0.0/content/getting-started/http-stream"
@@ -35,6 +29,7 @@
               {
                 "group": "Text to Speech",
                 "pages": [
+                  "v4.0.0/content/text-to-speech/quickstart",
                   "v4.0.0/content/text-to-speech/how-to-tts",
                   "v4.0.0/content/text-to-speech/stream-tts",
                   "v4.0.0/content/text-to-speech/pronunciation-dictionaries",
@@ -44,57 +39,64 @@
               {
                 "group": "Speech to Text",
                 "pages": [
-                  "v4.0.0/content/speech-to-text-new/overview",
+                  "v4.0.0/content/speech-to-text/overview",
+                  "v4.0.0/content/speech-to-text/quickstart",
                   {
-                    "group": "Pre-Recorded (Lightning STT)",
+                    "group": "Pre-Recorded",
                     "icon": "play",
                     "pages": [
-                      "v4.0.0/content/speech-to-text-new/pre-recorded/quickstart",
-                      "v4.0.0/content/speech-to-text-new/pre-recorded/audio-formats",
-                      "v4.0.0/content/speech-to-text-new/pre-recorded/webhooks",
-                      "v4.0.0/content/speech-to-text-new/pre-recorded/features",
-                      "v4.0.0/content/speech-to-text-new/pre-recorded/troubleshooting",
-                      "v4.0.0/content/speech-to-text-new/pre-recorded/best-practices",
-                      "v4.0.0/content/speech-to-text-new/pre-recorded/code-examples"
+                      "v4.0.0/content/speech-to-text/pre-recorded/quickstart",
+                      "v4.0.0/content/speech-to-text/pre-recorded/audio-formats",
+                      "v4.0.0/content/speech-to-text/pre-recorded/webhooks",
+                      "v4.0.0/content/speech-to-text/pre-recorded/features",
+                      "v4.0.0/content/speech-to-text/pre-recorded/troubleshooting",
+                      "v4.0.0/content/speech-to-text/pre-recorded/best-practices",
+                      "v4.0.0/content/speech-to-text/pre-recorded/code-examples"
                     ]
                   },
                   {
-                    "group": "Realtime (Lightning STT WebSocket)",
+                    "group": "Realtime (WebSocket)",
                     "icon": "radio",
                     "pages": [
-                      "v4.0.0/content/speech-to-text-new/realtime/quickstart",
-                      "v4.0.0/content/speech-to-text-new/realtime/response-format",
-                      "v4.0.0/content/speech-to-text-new/realtime/audio-formats",
-                      "v4.0.0/content/speech-to-text-new/realtime/features",
-                      "v4.0.0/content/speech-to-text-new/realtime/troubleshooting",
-                      "v4.0.0/content/speech-to-text-new/realtime/best-practices"
+                      "v4.0.0/content/speech-to-text/realtime/quickstart",
+                      "v4.0.0/content/speech-to-text/realtime/response-format",
+                      "v4.0.0/content/speech-to-text/realtime/audio-formats",
+                      "v4.0.0/content/speech-to-text/realtime/features",
+                      "v4.0.0/content/speech-to-text/realtime/troubleshooting",
+                      "v4.0.0/content/speech-to-text/realtime/best-practices"
                     ]
                   },
                   {
                     "group": "Features",
                     "icon": "layer-group",
                     "pages": [
-                      "v4.0.0/content/speech-to-text-new/features/word-timestamps",
-                      "v4.0.0/content/speech-to-text-new/features/language-detection",
-                      "v4.0.0/content/speech-to-text-new/features/utterances",
-                      "v4.0.0/content/speech-to-text-new/features/diarization",
-                      "v4.0.0/content/speech-to-text-new/features/redaction",
-                      "v4.0.0/content/speech-to-text-new/features/full-transcript",
-                      "v4.0.0/content/speech-to-text-new/features/numeric-formatting",
-                      "v4.0.0/content/speech-to-text-new/features/word-boosting",
-                      "v4.0.0/content/speech-to-text-new/features/age-and-gender-detection",
-                      "v4.0.0/content/speech-to-text-new/features/emotion-detection"
+                      "v4.0.0/content/speech-to-text/features/word-timestamps",
+                      "v4.0.0/content/speech-to-text/features/language-detection",
+                      "v4.0.0/content/speech-to-text/features/utterances",
+                      "v4.0.0/content/speech-to-text/features/diarization",
+                      "v4.0.0/content/speech-to-text/features/redaction",
+                      "v4.0.0/content/speech-to-text/features/full-transcript",
+                      "v4.0.0/content/speech-to-text/features/numeric-formatting",
+                      "v4.0.0/content/speech-to-text/features/word-boosting",
+                      "v4.0.0/content/speech-to-text/features/age-and-gender-detection",
+                      "v4.0.0/content/speech-to-text/features/emotion-detection"
                     ]
                   },
                   {
                     "group": "Benchmarks",
                     "icon": "chart-line",
                     "pages": [
-                      "v4.0.0/content/speech-to-text-new/benchmarks/performance",
-                      "v4.0.0/content/speech-to-text-new/benchmarks/metrics-overview",
-                      "v4.0.0/content/speech-to-text-new/benchmarks/evaluation-walkthrough"
+                      "v4.0.0/content/speech-to-text/benchmarks/performance",
+                      "v4.0.0/content/speech-to-text/benchmarks/metrics-overview",
+                      "v4.0.0/content/speech-to-text/benchmarks/evaluation-walkthrough"
                     ]
                   }
+                ]
+              },
+              {
+                "group": "Cookbooks",
+                "pages": [
+                  "v4.0.0/content/cookbooks/speech-to-text"
                 ]
               },
               {
@@ -113,12 +115,6 @@
                   "v4.0.0/content/integrations/livekit",
                   "v4.0.0/content/integrations/plivo",
                   "v4.0.0/content/integrations/vonage"
-                ]
-              },
-              {
-                "group": "Product",
-                "pages": [
-                  "v4.0.0/content/product/projects"
                 ]
               },
               {
@@ -145,6 +141,9 @@
               {
                 "group": "Text to Speech",
                 "pages": [
+                  "v4.0.0/content/api-references/lightning-v3.1",
+                  "v4.0.0/content/api-references/lightning-v3.1-stream",
+                  "v4.0.0/content/api-references/lightning-v3.1-ws",
                   "v4.0.0/content/api-references/lightning-v2",
                   "v4.0.0/content/api-references/lightning-v2-stream",
                   "v4.0.0/content/api-references/lightning-v2-ws"
@@ -153,15 +152,13 @@
               {
                 "group": "Speech to Text",
                 "pages": [
-                  "v4.0.0/content/api-references/lightning-asr",
-                  "v4.0.0/content/api-references/lightning-asr-ws"
+                  "v4.0.0/content/api-references/pulse-stt",
+                  "v4.0.0/content/api-references/pulse-stt-ws"
                 ]
               },
               {
                 "group": "Voices",
-                "pages": [
-                  "v4.0.0/content/api-references/get-voices-api"
-                ]
+                "pages": ["v4.0.0/content/api-references/get-voices-api"]
               },
               {
                 "group": "Voice Cloning",
@@ -172,7 +169,7 @@
                 ]
               },
               {
-                "group": "Pronunciations dicts",
+                "group": "Pronunciation Dictionaries",
                 "pages": [
                   "v4.0.0/content/api-references/pronunciations-dict/list",
                   "v4.0.0/content/api-references/pronunciations-dict/create",
@@ -183,13 +180,78 @@
             ]
           },
           {
+            "tab": "Self Host",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": ["v4.0.0/content/on-prem/introduction"]
+              },
+              {
+                "group": "Docker Setup",
+                "pages": [
+                  {
+                    "group": "STT Deployment",
+                    "pages": [
+                      "v4.0.0/content/on-prem/docker/stt/prerequisites",
+                      "v4.0.0/content/on-prem/docker/stt/quick-start",
+                      "v4.0.0/content/on-prem/docker/stt/configuration",
+                      "v4.0.0/content/on-prem/docker/stt/docker-troubleshooting"
+                    ]
+                  },
+                  {
+                    "group": "TTS Deployment",
+                    "pages": [
+                      "v4.0.0/content/on-prem/docker/tts/prerequisites",
+                      "v4.0.0/content/on-prem/docker/tts/quick-start",
+                      "v4.0.0/content/on-prem/docker/tts/configuration",
+                      "v4.0.0/content/on-prem/docker/tts/docker-troubleshooting"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Kubernetes Setup",
+                "pages": [
+                  "v4.0.0/content/on-prem/kubernetes/prerequisites",
+                  "v4.0.0/content/on-prem/kubernetes/quick-start",
+                  {
+                    "group": "Storage & PVC",
+                    "pages": [
+                      "v4.0.0/content/on-prem/kubernetes/storage/efs-configuration",
+                      "v4.0.0/content/on-prem/kubernetes/storage/model-storage",
+                      "v4.0.0/content/on-prem/kubernetes/storage/redis-persistence"
+                    ]
+                  },
+                  {
+                    "group": "Autoscaling",
+                    "pages": [
+                      "v4.0.0/content/on-prem/kubernetes/autoscaling/hpa-configuration",
+                      "v4.0.0/content/on-prem/kubernetes/autoscaling/cluster-autoscaler",
+                      "v4.0.0/content/on-prem/kubernetes/autoscaling/metrics-setup",
+                      "v4.0.0/content/on-prem/kubernetes/autoscaling/grafana-dashboards"
+                    ]
+                  },
+                  "v4.0.0/content/on-prem/kubernetes/license-proxy",
+                  "v4.0.0/content/on-prem/kubernetes/k8s-troubleshooting"
+                ]
+              },
+              {
+                "group": "Troubleshooting",
+                "pages": [
+                  "v4.0.0/content/on-prem/troubleshooting/common-issues",
+                  "v4.0.0/content/on-prem/troubleshooting/debugging-guide",
+                  "v4.0.0/content/on-prem/troubleshooting/logs-analysis"
+                ]
+              }
+            ]
+          },
+
+          {
             "tab": "Client Libraries",
             "groups": [
               {
                 "group": "Client Libraries",
-                "pages": [
-                  "v4.0.0/content/client-libraries/overview"
-                ]
+                "pages": ["v4.0.0/content/client-libraries/overview"]
               }
             ]
           },
@@ -198,9 +260,7 @@
             "groups": [
               {
                 "group": "Changelog",
-                "pages": [
-                  "v4.0.0/content/changelog/announcements"
-                ]
+                "pages": ["v4.0.0/content/changelog/announcements"]
               }
             ]
           }
@@ -214,9 +274,7 @@
             "groups": [
               {
                 "group": "Introduction",
-                "pages": [
-                  "v3.0.1/content/introduction/introduction"
-                ]
+                "pages": ["v3.0.1/content/introduction/introduction"]
               },
               {
                 "group": "Getting Started",
@@ -255,9 +313,7 @@
               },
               {
                 "group": "Product",
-                "pages": [
-                  "v3.0.1/content/product/projects"
-                ]
+                "pages": ["v3.0.1/content/product/projects"]
               },
               {
                 "group": "Best Practices",
@@ -296,15 +352,11 @@
               },
               {
                 "group": "Lightning",
-                "pages": [
-                  "v3.0.1/content/api-references/lightning"
-                ]
+                "pages": ["v3.0.1/content/api-references/lightning"]
               },
               {
                 "group": "Voices",
-                "pages": [
-                  "v3.0.1/content/api-references/get-voices-api"
-                ]
+                "pages": ["v3.0.1/content/api-references/get-voices-api"]
               },
               {
                 "group": "Voice Cloning",
@@ -321,9 +373,7 @@
             "groups": [
               {
                 "group": "Client Libraries",
-                "pages": [
-                  "v3.0.1/content/client-libraries/overview"
-                ]
+                "pages": ["v3.0.1/content/client-libraries/overview"]
               }
             ]
           },
@@ -332,9 +382,7 @@
             "groups": [
               {
                 "group": "Changelog",
-                "pages": [
-                  "v3.0.1/content/changelog/announcements"
-                ]
+                "pages": ["v3.0.1/content/changelog/announcements"]
               }
             ]
           }
@@ -348,9 +396,7 @@
             "groups": [
               {
                 "group": "Introduction",
-                "pages": [
-                  "v2.2.0/content/introduction/introduction"
-                ]
+                "pages": ["v2.2.0/content/introduction/introduction"]
               },
               {
                 "group": "Getting Started",
@@ -389,9 +435,7 @@
               },
               {
                 "group": "Product",
-                "pages": [
-                  "v2.2.0/content/product/projects"
-                ]
+                "pages": ["v2.2.0/content/product/projects"]
               },
               {
                 "group": "Best Practices",
@@ -430,15 +474,11 @@
               },
               {
                 "group": "Lightning",
-                "pages": [
-                  "v2.2.0/content/api-references/lightning"
-                ]
+                "pages": ["v2.2.0/content/api-references/lightning"]
               },
               {
                 "group": "Voices",
-                "pages": [
-                  "v2.2.0/content/api-references/get-voices-api"
-                ]
+                "pages": ["v2.2.0/content/api-references/get-voices-api"]
               },
               {
                 "group": "Voice Cloning",
@@ -455,9 +495,7 @@
             "groups": [
               {
                 "group": "Client Libraries",
-                "pages": [
-                  "v2.2.0/content/client-libraries/overview"
-                ]
+                "pages": ["v2.2.0/content/client-libraries/overview"]
               }
             ]
           },
@@ -466,9 +504,7 @@
             "groups": [
               {
                 "group": "Changelog",
-                "pages": [
-                  "v2.2.0/content/changelog/announcements"
-                ]
+                "pages": ["v2.2.0/content/changelog/announcements"]
               }
             ]
           }
@@ -487,7 +523,9 @@
       "openapi-spec/get-cloned-voices-openapi.yaml",
       "openapi-spec/add-voice-openapi.yaml",
       "openapi-spec/delete-cloned-voice-openapi.yaml",
-      "openapi-spec/asr-openapi.yaml"
+      "openapi-spec/asr-openapi.yaml",
+      "openapi-spec/pulse-stt-openapi.yaml",
+      "openapi-spec/lightning-v3.1-openapi.yaml"
     ]
   },
   "navbar": {
@@ -520,6 +558,12 @@
   "integrations": {
     "gtm": {
       "tagId": "GTM-T9S9PBGF"
+    },
+    "posthog": {
+      "apiKey": "phc_wnu3OcaTwuHlc3N7PQy9JSH97Pn18KFbPtCBWYTVvta"
+    },
+    "mixpanel": {
+      "projectToken": "34e75530324b7ac3024292cfe3acb0e5"
     }
   }
 }

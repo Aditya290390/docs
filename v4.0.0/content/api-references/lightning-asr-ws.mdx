@@ -196,7 +196,7 @@ from urllib.parse import urlencode
 
 BASE_WS_URL = "wss://waves-api.smallest.ai/api/v1/lightning/get_text"
 
-async def stream_audio(audio_file, api_key, language="en", encoding="linear16", sample_rate=16000, word_timestamps="true", full_transcript="false", sentence_timestamps="false", redact_pii="false", redact_pci="false", numerals="auto", keywords="auto", "diarize": "false"):
+async def stream_audio(audio_file, api_key, language="en", encoding="linear16", sample_rate=16000, word_timestamps="true", full_transcript="false", sentence_timestamps="false", redact_pii="false", redact_pci="false", numerals="auto", keywords="auto", diarize="false"):
     params = {
         "language": language,
         "encoding": encoding,
