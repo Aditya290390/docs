@@ -29,6 +29,7 @@
               {
                 "group": "Text to Speech",
                 "pages": [
+                  "v4.0.0/content/text-to-speech/overview",
                   "v4.0.0/content/text-to-speech/quickstart",
                   "v4.0.0/content/text-to-speech/how-to-tts",
                   "v4.0.0/content/text-to-speech/stream-tts",
@@ -184,15 +185,30 @@
             "groups": [
               {
                 "group": "Getting Started",
-                "pages": ["v4.0.0/content/on-prem/introduction"]
+                "pages": [
+                  "v4.0.0/content/on-prem/getting-started/introduction",
+                  "v4.0.0/content/on-prem/getting-started/prerequisites",
+                  "v4.0.0/content/on-prem/getting-started/why-self-host",
+                  "v4.0.0/content/on-prem/getting-started/architecture"
+                ]
               },
               {
                 "group": "Docker Setup",
                 "pages": [
                   {
                     "group": "STT Deployment",
+                    "expanded": true,
                     "pages": [
-                      "v4.0.0/content/on-prem/docker/stt/prerequisites",
+                      {
+                        "group": "Prerequisites",
+                        "expanded": false,
+                        "pages": [
+                          "v4.0.0/content/on-prem/docker/stt/prerequisites/hardware-requirements",
+                          "v4.0.0/content/on-prem/docker/stt/prerequisites/software-requirements",
+                          "v4.0.0/content/on-prem/docker/stt/prerequisites/credentials",
+                          "v4.0.0/content/on-prem/docker/stt/prerequisites/verification"
+                        ]
+                      },
                       "v4.0.0/content/on-prem/docker/stt/quick-start",
                       "v4.0.0/content/on-prem/docker/stt/configuration",
                       "v4.0.0/content/on-prem/docker/stt/docker-troubleshooting"
@@ -200,8 +216,18 @@
                   },
                   {
                     "group": "TTS Deployment",
+                    "expanded": true,
                     "pages": [
-                      "v4.0.0/content/on-prem/docker/tts/prerequisites",
+                      {
+                        "group": "Prerequisites",
+                        "expanded": false,
+                        "pages": [
+                          "v4.0.0/content/on-prem/docker/tts/prerequisites/hardware-requirements",
+                          "v4.0.0/content/on-prem/docker/tts/prerequisites/software-requirements",
+                          "v4.0.0/content/on-prem/docker/tts/prerequisites/credentials",
+                          "v4.0.0/content/on-prem/docker/tts/prerequisites/verification"
+                        ]
+                      },
                       "v4.0.0/content/on-prem/docker/tts/quick-start",
                       "v4.0.0/content/on-prem/docker/tts/configuration",
                       "v4.0.0/content/on-prem/docker/tts/docker-troubleshooting"
@@ -212,8 +238,24 @@
               {
                 "group": "Kubernetes Setup",
                 "pages": [
-                  "v4.0.0/content/on-prem/kubernetes/prerequisites",
+                  {
+                    "group": "Prerequisites",
+                    "pages": [
+                      "v4.0.0/content/on-prem/kubernetes/prerequisites/hardware-requirements",
+                      "v4.0.0/content/on-prem/kubernetes/prerequisites/software-requirements",
+                      "v4.0.0/content/on-prem/kubernetes/prerequisites/credentials",
+                      "v4.0.0/content/on-prem/kubernetes/prerequisites/verification"
+                    ]
+                  },
                   "v4.0.0/content/on-prem/kubernetes/quick-start",
+                  {
+                    "group": "AWS",
+                    "pages": [
+                      "v4.0.0/content/on-prem/kubernetes/aws/eks-setup",
+                      "v4.0.0/content/on-prem/kubernetes/aws/gpu-nodes",
+                      "v4.0.0/content/on-prem/kubernetes/aws/iam-irsa"
+                    ]
+                  },
                   {
                     "group": "Storage & PVC",
                     "pages": [
@@ -231,7 +273,6 @@
                       "v4.0.0/content/on-prem/kubernetes/autoscaling/grafana-dashboards"
                     ]
                   },
-                  "v4.0.0/content/on-prem/kubernetes/license-proxy",
                   "v4.0.0/content/on-prem/kubernetes/k8s-troubleshooting"
                 ]
               },
@@ -518,14 +559,11 @@
   },
   "api": {
     "openapi": [
-      "openapi-spec/waves-api.yaml",
-      "openapi-spec/get-voices-openapi.yaml",
-      "openapi-spec/get-cloned-voices-openapi.yaml",
-      "openapi-spec/add-voice-openapi.yaml",
-      "openapi-spec/delete-cloned-voice-openapi.yaml",
+      "openapi-spec/tts-api.yaml",
+      "openapi-spec/voices-api.yaml",
+      "openapi-spec/pronunciation-dictionaries-api.yaml",
       "openapi-spec/asr-openapi.yaml",
-      "openapi-spec/pulse-stt-openapi.yaml",
-      "openapi-spec/lightning-v3.1-openapi.yaml"
+      "openapi-spec/pulse-stt-openapi.yaml"
     ]
   },
   "navbar": {
@@ -567,7 +605,7 @@
       "apiKey": "phc_wnu3OcaTwuHlc3N7PQy9JSH97Pn18KFbPtCBWYTVvta"
     },
     "mixpanel": {
-      "projectToken": "34e75530324b7ac3024292cfe3acb0e5"
+      "projectToken": "005a880f58fbad433a357b2bfc7f4d54"
     }
   }
 }

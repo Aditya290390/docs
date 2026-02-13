@@ -1,50 +1,9 @@
 ---
-title: Prerequisites
-description: System requirements and setup needed before deploying Text-to-Speech with Docker
+title: Software Requirements
+description: Software and dependencies for deploying Text-to-Speech with Docker
 ---
 
-## Overview
-
-Before deploying Smallest Self-Host Text-to-Speech (TTS) with Docker, ensure your system meets the hardware and software requirements. This guide walks you through everything you need to prepare your environment.
-
-## Hardware Requirements
-
-### Minimum Specifications
-
-<CardGroup cols={2}>
-  <Card title="CPU" icon="microchip">
-    **4 cores** minimum
-    
-    8+ cores recommended for production
-  </Card>
-
-  <Card title="RAM" icon="memory">
-    **16 GB** minimum
-    
-    32+ GB recommended for production
-  </Card>
-
-  <Card title="GPU" icon="server">
-    **NVIDIA GPU required**
-    
-    - L40s or A10 (recommended)
-    - A10, A100, H100, T4, L4 (supported)
-    - Minimum 16GB VRAM
-  </Card>
-
-  <Card title="Storage" icon="hard-drive">
-    **100 GB** minimum
-    
-    - 50 GB for models
-    - 50 GB for logs and data
-  </Card>
-</CardGroup>
-
-## Software Requirements
-
-### Operating System
-
-Smallest Self-Host TTS supports the following operating systems:
+## Operating System
 
 <Tabs>
   <Tab title="Ubuntu/Debian">
@@ -68,7 +27,7 @@ Smallest Self-Host TTS supports the following operating systems:
   </Tab>
 </Tabs>
 
-### Required Software
+## Required Software
 
 <Steps>
   <Step title="Docker">
@@ -112,9 +71,7 @@ Smallest Self-Host TTS supports the following operating systems:
   </Step>
 </Steps>
 
-## Installation Guides
-
-### Install Docker
+## Install Docker
 
 <Tabs>
   <Tab title="Ubuntu">
@@ -160,7 +117,7 @@ Smallest Self-Host TTS supports the following operating systems:
   </Tab>
 </Tabs>
 
-### Install NVIDIA Driver
+## Install NVIDIA Driver
 
 <Tabs>
   <Tab title="Ubuntu">
@@ -196,7 +153,7 @@ Smallest Self-Host TTS supports the following operating systems:
   </Tab>
 </Tabs>
 
-### Install NVIDIA Container Toolkit
+## Install NVIDIA Container Toolkit
 
 ```bash
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
@@ -211,7 +168,7 @@ sudo apt-get install -y nvidia-container-toolkit
 sudo systemctl restart docker
 ```
 
-### Verify GPU Access
+## Verify GPU Access
 
 Test that Docker can access the GPU:
 
@@ -220,89 +177,4 @@ docker run --rm --gpus all nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi
 ```
 
 You should see your GPU information displayed.
-
-## Credentials
-
-Before installation, obtain the following from Smallest.ai:
-
-<AccordionGroup>
-  <Accordion title="License Key" icon="key">
-    Your unique license key for validation
-    
-    Contact: **support@smallest.ai**
-  </Accordion>
-
-  <Accordion title="Container Registry Access" icon="docker">
-    Credentials to pull Docker images:
-    - Registry URL: `quay.io`
-    - Username
-    - Password
-    - Email
-    
-    Contact: **support@smallest.ai**
-  </Accordion>
-
-  <Accordion title="Model URLs" icon="download">
-    Download URLs for TTS models (if required)
-    
-    Contact: **support@smallest.ai**
-  </Accordion>
-</AccordionGroup>
-
-## Network Requirements
-
-Ensure the following ports are available:
-
-| Port | Service | Purpose |
-|------|---------|---------|
-| 7100 | API Server | Client API requests |
-| 8876 | Lightning TTS | TTS service endpoint |
-| 3369 | License Proxy | Internal license validation |
-| 6379 | Redis | Internal caching |
-
-<Warning>
-The License Proxy requires outbound HTTPS access to Smallest's license servers for validation. Ensure your firewall allows outbound connections to:
-- `console-api.smallest.ai` (port 443)
-</Warning>
-
-## Verification Checklist
-
-Before proceeding to installation, verify:
-
-<Steps>
-  <Step title="Docker Running">
-    ```bash
-    docker ps
-    ```
-    Should execute without errors
-  </Step>
-
-  <Step title="GPU Accessible">
-    ```bash
-    docker run --rm --gpus all nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi
-    ```
-    Should display GPU information
-  </Step>
-
-  <Step title="Credentials Ready">
-    - [ ] License key obtained
-    - [ ] Container registry username and password
-    - [ ] Model download URLs (if required)
-  </Step>
-
-  <Step title="Ports Available">
-    ```bash
-    sudo netstat -tuln | grep -E '(7100|8876|3369|6379)'
-    ```
-    Should return no results (ports free)
-  </Step>
-</Steps>
-
-## What's Next?
-
-Once all prerequisites are met, proceed to the quick start guide:
-
-<Card title="TTS Quick Start" icon="rocket" href="/docker/tts/quick-start">
-  Deploy Smallest Self-Host TTS with Docker Compose
-</Card>
 

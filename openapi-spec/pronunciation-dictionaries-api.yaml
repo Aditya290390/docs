@@ -1,0 +1,369 @@
+openapi: 3.0.1
+info:
+  title: Pronunciation Dictionaries API
+  description: |
+    API for managing pronunciation dictionaries in Waves.
+    Create, update, and delete custom pronunciation rules for text-to-speech.
+  version: 1.0.0
+servers:
+  - url: https://waves-api.smallest.ai
+    description: Waves API server
+
+paths:
+  /api/v1/pronunciation-dicts:
+    get:
+      tags:
+        - Pronunciation Dictionaries
+      summary: Get pronunciation dictionaries
+      description: Retrieve all pronunciation dictionaries for the authenticated user
+      operationId: getPronunciationDicts
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of pronunciation dictionaries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PronunciationDict"
+              example:
+                - id: "64f1234567890abcdef12345"
+                  items:
+                    - word: "mysql"
+                      pronunciation: "my-sequel"
+                  createdAt: "2023-09-01T12:00:00.000Z"
+        "401":
+          description: Unauthorized - Invalid or missing authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "Unauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "Internal server error"
+
+    post:
+      tags:
+        - Pronunciation Dictionaries
+      summary: Create pronunciation dictionary
+      description: Create a new pronunciation dictionary for the authenticated user
+      operationId: createPronunciationDict
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePronunciationDictRequest"
+            example:
+              items:
+                - word: "mysql"
+                  pronunciation: "my-sequel"
+      responses:
+        "200":
+          description: Successfully created pronunciation dictionary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PronunciationDict"
+              example:
+                id: "64f1234567890abcdef12345"
+                items:
+                  - word: "mysql"
+                    pronunciation: "my-sequel"
+                createdAt: "2023-09-01T12:00:00.000Z"
+        "400":
+          description: Bad request - Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "Invalid request body"
+                details:
+                  - code: "invalid_type"
+                    expected: "string"
+                    received: "undefined"
+                    path: ["items", 0, "word"]
+                    message: "Required"
+        "401":
+          description: Unauthorized - Invalid or missing authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "Unauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "Internal server error"
+
+    put:
+      tags:
+        - Pronunciation Dictionaries
+      summary: Update pronunciation dictionary
+      description: Update an existing pronunciation dictionary for the authenticated user
+      operationId: updatePronunciationDict
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePronunciationDictRequest"
+            example:
+              id: "64f1234567890abcdef12345"
+              items:
+                - word: "mysql"
+                  pronunciation: "my-sequel"
+      responses:
+        "200":
+          description: Successfully updated pronunciation dictionary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdatePronunciationDictResponse"
+              example:
+                id: "64f1234567890abcdef12345"
+                items:
+                  - word: "mysql"
+                    pronunciation: "my-sequel"
+                  - word: "goodbye"
+                    pronunciation: "goodbai"
+        "400":
+          description: Bad request - Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "Invalid request body"
+                details:
+                  - code: "invalid_type"
+                    expected: "string"
+                    received: "undefined"
+                    path: ["id"]
+                    message: "Required"
+        "401":
+          description: Unauthorized - Invalid or missing authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "Unauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "Internal server error"
+
+    delete:
+      tags:
+        - Pronunciation Dictionaries
+      summary: Delete pronunciation dictionary
+      description: Delete an existing pronunciation dictionary for the authenticated user
+      operationId: deletePronunciationDict
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeletePronunciationDictRequest"
+            example:
+              id: "64f1234567890abcdef12345"
+      responses:
+        "200":
+          description: Successfully deleted pronunciation dictionary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeletePronunciationDictResponse"
+              example:
+                id: "64f1234567890abcdef12345"
+                deleted: true
+        "400":
+          description: Bad request - Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "Invalid request body"
+                details:
+                  - code: "invalid_type"
+                    expected: "string"
+                    received: "undefined"
+                    path: ["id"]
+                    message: "Required"
+        "401":
+          description: Unauthorized - Invalid or missing authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "Unauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "Internal server error"
+
+components:
+  schemas:
+    PronunciationItem:
+      type: object
+      required:
+        - word
+        - pronunciation
+      properties:
+        word:
+          type: string
+          minLength: 1
+          description: The word to be pronounced
+          example: "mysql"
+        pronunciation:
+          type: string
+          minLength: 1
+          description: The phonetic pronunciation of the word
+          example: "my-sequel"
+
+    PronunciationDict:
+      type: object
+      required:
+        - id
+        - items
+        - createdAt
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the pronunciation dictionary
+          example: "64f1234567890abcdef12345"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PronunciationItem"
+          description: List of word-pronunciation pairs
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the dictionary was created
+          example: "2023-09-01T12:00:00.000Z"
+
+    CreatePronunciationDictRequest:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PronunciationItem"
+          minItems: 1
+          description: List of word-pronunciation pairs to create
+
+    UpdatePronunciationDictRequest:
+      type: object
+      required:
+        - id
+        - items
+      properties:
+        id:
+          type: string
+          minLength: 1
+          description: ID of the pronunciation dictionary to update
+          example: "64f1234567890abcdef12345"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PronunciationItem"
+          description: Updated list of word-pronunciation pairs
+
+    DeletePronunciationDictRequest:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          minLength: 1
+          description: ID of the pronunciation dictionary to delete
+          example: "64f1234567890abcdef12345"
+
+    UpdatePronunciationDictResponse:
+      type: object
+      required:
+        - id
+        - items
+      properties:
+        id:
+          type: string
+          description: ID of the updated pronunciation dictionary
+          example: "64f1234567890abcdef12345"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PronunciationItem"
+          description: Updated list of word-pronunciation pairs
+
+    DeletePronunciationDictResponse:
+      type: object
+      required:
+        - id
+        - deleted
+      properties:
+        id:
+          type: string
+          description: ID of the deleted pronunciation dictionary
+          example: "64f1234567890abcdef12345"
+        deleted:
+          type: boolean
+          description: Confirmation that the dictionary was deleted
+          example: true
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "Invalid request body"
+        details:
+          type: array
+          items:
+            type: object
+          description: Additional error details (validation errors)
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer authentication header of the form `Bearer <api_key>`, where <api_key> is your api key.
+

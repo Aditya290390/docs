@@ -1,0 +1,376 @@
+openapi: 3.0.1
+info:
+  title: Text-to-Speech API
+  description: |
+    API for Waves text-to-speech models.
+    Featuring Lightning v2 and Lightning v3.1 models.
+  version: 1.0.0
+servers:
+  - url: https://waves-api.smallest.ai
+    description: Waves API server
+
+paths:
+  /api/v1/lightning-v2/get_speech:
+    post:
+      tags:
+        - Lightning v2
+      operationId: synthesizeLightningv2Speech
+      summary: Generate speech from text (Lightning v2)
+      description: Converts provided text to speech using the Lightning v2 model.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Lightningv2Request"
+      responses:
+        "200":
+          description: Synthesized speech retrieved successfully.
+          content:
+            audio/wav:
+              schema:
+                type: string
+                format: binary
+                description: A PCM int16 WAV file at the specified sample rate.
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "InvalidRequest"
+                message: "The 'text' field is required."
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "Unauthorized"
+                message: "Bearer token is missing or invalid."
+        "500":
+          description: Server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "InternalServerError"
+                message: "An unexpected error occurred."
+
+  /api/v1/lightning-v3.1/get_speech:
+    post:
+      tags:
+        - Lightning V3.1
+      operationId: synthesizeLightningV31Speech
+      summary: Generate speech from text (Lightning V3.1)
+      description: Converts provided text to speech using the Lightning V3.1 model.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LightningV31Request"
+      responses:
+        "200":
+          description: Synthesized speech retrieved successfully.
+          content:
+            audio/wav:
+              schema:
+                type: string
+                format: binary
+                description: A PCM int16 WAV file at the specified sample rate.
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "InvalidRequest"
+                message: "The 'text' field is required."
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "Unauthorized"
+                message: "Bearer token is missing or invalid."
+        "500":
+          description: Server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "InternalServerError"
+                message: "An unexpected error occurred."
+
+  /api/v1/lightning-v2/stream:
+    post:
+      tags:
+        - Lightning v2
+      operationId: streamLightningv2Speech
+      summary: Stream speech from text (Lightning v2)
+      description: Converts provided text to speech using the Lightning v2 model with streaming response.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Lightningv2Request"
+      responses:
+        "200":
+          description: Synthesized speech retrieved successfully.
+          content:
+            text/event-stream:
+              example:
+                data: |
+                  event: chunk
+                  data: <WAV_DATA>
+                  done: false
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "InvalidRequest"
+                message: "The 'text' field is required."
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "Unauthorized"
+                message: "Bearer token is missing or invalid."
+        "500":
+          description: Server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "InternalServerError"
+                message: "An unexpected error occurred."
+
+  /api/v1/lightning-v3.1/stream:
+    post:
+      tags:
+        - Lightning V3.1
+      operationId: streamLightningV31Speech
+      summary: Stream speech from text (Lightning V3.1)
+      description: Converts provided text to speech using the Lightning V3.1 model with streaming response.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LightningV31Request"
+      responses:
+        "200":
+          description: Synthesized speech retrieved successfully.
+          content:
+            text/event-stream:
+              example:
+                data: |
+                  event: chunk
+                  data: <WAV_DATA>
+                  done: false
+        "400":
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "InvalidRequest"
+                message: "The 'text' field is required."
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "Unauthorized"
+                message: "Bearer token is missing or invalid."
+        "500":
+          description: Server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: "InternalServerError"
+                message: "An unexpected error occurred."
+
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type.
+        message:
+          type: string
+          description: Error message.
+
+    Lightningv2Request:
+      type: object
+      required:
+        - text
+        - voice_id
+      properties:
+        text:
+          type: string
+          description: The text to convert to speech.
+        voice_id:
+          type: string
+          description: The voice identifier to use for speech generation.
+        sample_rate:
+          type: integer
+          description: The sample rate for the generated audio.
+          minimum: 8000
+          maximum: 24000
+          default: 24000
+        speed:
+          type: number
+          description: The speed of the generated speech.
+          minimum: 0.5
+          maximum: 2.0
+          default: 1.0
+        consistency:
+          type: number
+          description: This parameter controls word repetition and skipping. Decrease it to prevent skipped words, and increase it to prevent repetition.
+          minimum: 0.0
+          maximum: 1.0
+          default: 0.5
+        similarity:
+          type: number
+          description: This parameter controls the similarity between the generated speech and the reference audio. Increase it to make the speech more similar to the reference audio.
+          minimum: 0.0
+          maximum: 1.0
+          default: 0.0
+        enhancement:
+          type: number
+          description: Enhances speech quality at the cost of increased latency.
+          minimum: 0
+          maximum: 2
+          default: 1
+        language:
+          type: string
+          description: Language code for text normalization (e.g., how numbers, dates, and abbreviations are spelled out). Set to 'auto' for automatic language detection, or specify a language code like 'en' or 'hi' to normalize text according to that language's rules.
+          default: "auto"
+          enum:
+            - auto
+            - en
+            - hi
+            - ta
+            - kn
+            - mr
+            - bn
+            - gu
+            - ar
+            - he
+            - fr
+            - de
+            - pl
+            - ru
+            - it
+            - nl
+            - es
+            - sv
+            - ml
+            - te
+        output_format:
+          type: string
+          description: The format of the output audio.
+          default: "pcm"
+          enum:
+            - pcm
+            - mp3
+            - wav
+            - mulaw
+        pronunciation_dicts:
+          type: array
+          items:
+            type: string
+            description: The ID of the pronunciation dictionary to use for speech generation.
+          description: The IDs of the pronunciation dictionaries to use for speech generation.
+
+    LightningV31Request:
+      type: object
+      required:
+        - text
+        - voice_id
+      properties:
+        text:
+          type: string
+          description: The text to convert to speech.
+        voice_id:
+          type: string
+          description: The voice identifier to use for speech generation.
+        sample_rate:
+          type: integer
+          description: The sample rate for the generated audio.
+          enum:
+            - 8000
+            - 16000
+            - 24000
+            - 44100
+          default: 44100
+        speed:
+          type: number
+          description: The speed of the generated speech.
+          minimum: 0.5
+          maximum: 2
+          default: 1.0
+        language:
+          type: string
+          description: Language code for text normalization (e.g., how numbers, dates, and abbreviations are spelled out). Set to 'auto' for automatic language detection, or specify a language code like 'en' or 'hi'.
+          default: "auto"
+          enum:
+            - auto
+            - en
+            - hi
+            - ta
+            - es
+        output_format:
+          type: string
+          description: The format of the output audio.
+          default: "pcm"
+          enum:
+            - pcm
+            - mp3
+            - wav
+            - mulaw
+        pronunciation_dicts:
+          type: array
+          items:
+            type: string
+            description: The ID of the pronunciation dictionary to use for speech generation.
+          description: The IDs of the pronunciation dictionaries to use for speech generation.
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer authentication header of the form `Bearer <api_key>`, where <api_key> is your api key.
+

@@ -39,9 +39,9 @@ def main():
     languages = client.get_languages()
     print(f"Available Languages: {languages}")
     
-    # Get available voices for the "lightning-v2" model
-    voices = client.get_voices(model="lightning-v2")
-    print(f"Available Voices (Model: 'lightning-v2'): {voices}")
+    # Get available voices for the "lightning-v3.1" model
+    voices = client.get_voices(model="lightning-v3.1")
+    print(f"Available Voices (Model: 'lightning-v3.1'): {voices}")
     
     # Get user-specific cloned voices
     cloned_voices = client.get_cloned_voices()
@@ -58,10 +58,10 @@ if __name__ == "__main__":
 
 ## Explanation of Functions
 
-- `get_languages()`: Retrieves the list of supported languages for Text-to-Speech.  
-- `get_voices(model="model_name")`: Retrieves the voices available for a specific model (e.g., "lightning-v2").  
-- `get_cloned_voices()`: Fetches all user-specific cloned voices.  
-- `get_models()`: Retrieves the TTS models on the platform available through API.  
+- `get_languages()`: Retrieves the list of supported languages for Text-to-Speech.
+- `get_voices(model="model_name")`: Retrieves the voices available for a specific model (e.g., "lightning-v3.1").
+- `get_cloned_voices()`: Fetches all user-specific cloned voices.
+- `get_models()`: Retrieves the TTS models on the platform available through API.
 
 
 ## Need Help?
