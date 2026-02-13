@@ -78,31 +78,31 @@ kubectl get pods -w
 <table style={{ borderCollapse: 'separate', borderSpacing: 0, width: '100%', borderRadius: '8px', overflow: 'hidden' }}>
   <thead>
     <tr style={{ backgroundColor: 'rgba(255, 255, 255, 0.08)' }}>
-      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderTopLeftRadius: '8px' }}>Component</th>
-      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Startup Time</th>
-      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderTopRightRadius: '8px' }}>Ready Indicator</th>
+      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', borderTopLeftRadius: '8px' }}>Component</th>
+      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Startup Time</th>
+      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', borderTopRightRadius: '8px' }}>Ready Indicator</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Redis</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>~30s</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}><code>1/1 Running</code></td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Redis</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>~30s</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}><code>1/1 Running</code></td>
     </tr>
     <tr>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>License Proxy</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>~1m</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}><code>1/1 Running</code></td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>License Proxy</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>~1m</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}><code>1/1 Running</code></td>
     </tr>
     <tr>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Lightning ASR</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>2-10m</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}><code>1/1 Running</code> (model download on first run)</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Lightning ASR</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>2-10m</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}><code>1/1 Running</code> (model download on first run)</td>
     </tr>
     <tr>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderBottomLeftRadius: '8px' }}>API Server</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>~30s</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderBottomRightRadius: '8px' }}><code>1/1 Running</code></td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', borderBottomLeftRadius: '8px' }}>API Server</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>~30s</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', borderBottomRightRadius: '8px' }}><code>1/1 Running</code></td>
     </tr>
   </tbody>
 </table>
@@ -122,31 +122,31 @@ All pods should show `Running` status with the following services available:
 <table style={{ borderCollapse: 'separate', borderSpacing: 0, width: '100%', borderRadius: '8px', overflow: 'hidden' }}>
   <thead>
     <tr style={{ backgroundColor: 'rgba(255, 255, 255, 0.08)' }}>
-      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderTopLeftRadius: '8px' }}>Service</th>
-      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Port</th>
-      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderTopRightRadius: '8px' }}>Description</th>
+      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', borderTopLeftRadius: '8px' }}>Service</th>
+      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Port</th>
+      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', borderTopRightRadius: '8px' }}>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>api-server</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>7100</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>REST API endpoint</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>api-server</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>7100</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>REST API endpoint</td>
     </tr>
     <tr>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>lightning-asr-internal</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>2269</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>ASR inference service</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>lightning-asr-internal</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>2269</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>ASR inference service</td>
     </tr>
     <tr>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>license-proxy</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>3369</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>License validation</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>license-proxy</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>3369</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>License validation</td>
     </tr>
     <tr>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderBottomLeftRadius: '8px' }}>redis-master</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>6379</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderBottomRightRadius: '8px' }}>Request queue</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', borderBottomLeftRadius: '8px' }}>redis-master</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>6379</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', borderBottomRightRadius: '8px' }}>Request queue</td>
     </tr>
   </tbody>
 </table>
@@ -178,24 +178,24 @@ This deploys HorizontalPodAutoscalers that scale based on active requests:
 <table style={{ borderCollapse: 'separate', borderSpacing: 0, width: '100%', borderRadius: '8px', overflow: 'hidden' }}>
   <thead>
     <tr style={{ backgroundColor: 'rgba(255, 255, 255, 0.08)' }}>
-      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderTopLeftRadius: '8px' }}>Component</th>
-      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Metric</th>
-      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Default Target</th>
-      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderTopRightRadius: '8px' }}>Behavior</th>
+      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', borderTopLeftRadius: '8px' }}>Component</th>
+      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Metric</th>
+      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Default Target</th>
+      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', borderTopRightRadius: '8px' }}>Behavior</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Lightning ASR</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}><code>asr_active_requests</code></td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>4 per pod</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Scales GPU workers based on inference queue depth</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Lightning ASR</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}><code>asr_active_requests</code></td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>4 per pod</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Scales GPU workers based on inference queue depth</td>
     </tr>
     <tr>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderBottomLeftRadius: '8px' }}>API Server</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}><code>lightning_asr_replica_count</code></td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>2:1 ratio</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderBottomRightRadius: '8px' }}>Maintains API capacity proportional to ASR workers</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', borderBottomLeftRadius: '8px' }}>API Server</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}><code>lightning_asr_replica_count</code></td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>2:1 ratio</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', borderBottomRightRadius: '8px' }}>Maintains API capacity proportional to ASR workers</td>
     </tr>
   </tbody>
 </table>
@@ -266,31 +266,31 @@ helm get values smallest-self-host -n smallest
 <table style={{ borderCollapse: 'separate', borderSpacing: 0, width: '100%', borderRadius: '8px', overflow: 'hidden' }}>
   <thead>
     <tr style={{ backgroundColor: 'rgba(255, 255, 255, 0.08)' }}>
-      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderTopLeftRadius: '8px' }}>Issue</th>
-      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Cause</th>
-      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderTopRightRadius: '8px' }}>Resolution</th>
+      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', borderTopLeftRadius: '8px' }}>Issue</th>
+      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Cause</th>
+      <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '800', border: '0.5px solid rgba(209, 213, 219, 0.2)', borderTopRightRadius: '8px' }}>Resolution</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Pods <code>Pending</code></td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Insufficient resources or missing GPU nodes</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Check <code>kubectl describe pod &lt;name&gt;</code> for scheduling errors</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Pods <code>Pending</code></td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Insufficient resources or missing GPU nodes</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Check <code>kubectl describe pod &lt;name&gt;</code> for scheduling errors</td>
     </tr>
     <tr>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}><code>ImagePullBackOff</code></td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Invalid registry credentials</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Verify <code>imageCredentials</code> in values.yaml</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}><code>ImagePullBackOff</code></td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Invalid registry credentials</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Verify <code>imageCredentials</code> in values.yaml</td>
     </tr>
     <tr>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}><code>CrashLoopBackOff</code></td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Invalid license or insufficient memory</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Check logs with <code>kubectl logs &lt;pod&gt; --previous</code></td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}><code>CrashLoopBackOff</code></td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Invalid license or insufficient memory</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Check logs with <code>kubectl logs &lt;pod&gt; --previous</code></td>
     </tr>
     <tr>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderBottomLeftRadius: '8px' }}>Slow model download</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff' }}>Large model size (~20GB)</td>
-      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', color: '#ffffff', borderBottomRightRadius: '8px' }}>Use shared storage (EFS) for caching</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', borderBottomLeftRadius: '8px' }}>Slow model download</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)' }}>Large model size (~20GB)</td>
+      <td style={{ padding: '12px 16px', border: '0.5px solid rgba(209, 213, 219, 0.2)', borderBottomRightRadius: '8px' }}>Use shared storage (EFS) for caching</td>
     </tr>
   </tbody>
 </table>
